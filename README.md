@@ -1,230 +1,592 @@
-# VerseUp Arena
+# ✝️ VerseUp Arena
 
-A modular Arabic Bible web app — verse image generator and six Bible games in one place.
+### Arabic Bible Verses • Games • Learning • Faith
 
-## What It Does
+**VerseUp Arena** is a modular Arabic Bible web application that combines **Scripture exploration, verse image generation, and interactive Bible games** in one lightweight, mobile-friendly experience.
 
-- Generate shareable 1080×1080 verse images with Arabic typography
-- Memory game: hide words in a verse and fill them in from memory
-- Reverse-words game: guess the original word from its reversed characters
-- Scrambled-words game: unscramble shuffled characters to find the word
-- Who-Am-I? flash-card game: read a clue, click the card, and it flips to reveal the Bible person's name
-- HolyWordle: Wordle-style guessing of Bible words with selectable word lengths (4–7 letters)
-- EmojiVerse: emoji flash cards — decode a set of emojis describing a Bible story, event, or verse, then flip the card for the answer
-- Smart verse search: by book name, book + chapter, exact reference, or free text
-- Saved preferences and score tracking with `localStorage`
+The project is designed to make engaging with the Bible more interactive — whether you're looking for a verse to share, memorizing Scripture, testing your Bible knowledge, or simply playing a quick game.
 
-## Architecture
+🌐 **Live Website:** https://verse-up-arena.vercel.app
+📦 **Repository:** https://github.com/MichaelMansour256/bible-quote-generator
+
+---
+
+## ✨ Features
+
+### 📖 Verse Explorer & Image Generator
+
+Search and explore the Arabic Bible, then turn any verse into a shareable image.
+
+* Browse by **Book → Chapter → Verse**
+* Search by:
+
+  * Exact verse reference
+  * Book name
+  * Book + chapter
+  * Free-text search
+* Generate **1080 × 1080** verse images
+* Choose from **12 Arabic fonts**
+* Choose from multiple background styles
+* Optional logo overlay
+* Automatic light/dark logo contrast
+* Download generated verses as PNG
+* Arabic Bible references are included in downloaded filenames
+
+### 🔎 Smart Bible Search
+
+VerseUp Arena supports multiple search patterns and automatically determines the most appropriate search mode.
+
+| Search       | Result                               |
+| ------------ | ------------------------------------ |
+| `يوحنا 3:16` | Exact verse                          |
+| `يوحنا 3`    | Chapters matching the chapter number |
+| `يوحنا`      | Chapters from the selected book      |
+| `الرب راعي`  | Full-text Bible search               |
+
+Search results can be navigated using the keyboard, expanded to reveal verses, and selected directly to generate a verse image.
+
+---
+
+# 🎮 Bible Games
+
+VerseUp Arena includes **six interactive Bible games**, designed around Scripture, Bible knowledge, memorization, and Arabic language interaction.
+
+## 🧠 Memory
+
+Test your ability to remember Scripture.
+
+* Select a specific verse or generate a random one
+* Hide a percentage of words based on difficulty
+* Fill missing words by:
+
+  * Typing
+  * Tapping word-bank chips
+* Automatic answer checking
+* Timer and scoring
+* High-score tracking
+* Multiple difficulty levels
+* Progress and preferences saved locally
+
+Difficulty ranges from approximately **20% hidden words on Easy** to **60% on Expert**.
+
+---
+
+## 🔄 Reverse Words
+
+Guess the original Bible term from its reversed characters.
+
+Choose between:
+
+* Books
+* Names
+* Places
+* Random terms
+
+The game features:
+
+* Live answer checking
+* Automatic progression after correct answers
+* Timer-based scoring
+* High scores
+* Skip functionality
+* Persistent game state
+
+---
+
+## 🔀 Scrambled Words
+
+Unscramble Bible-related words and terms.
+
+Players can solve words using either:
+
+* The keyboard
+* On-screen letter tiles
+
+Features include:
+
+* Live answer checking
+* Automatic progression
+* Category filtering
+* Difficulty filtering
+* Timer-based scoring
+* Mobile-friendly input
+* Persistent progress
+
+---
+
+## 🟩 HolyWordle
+
+A Bible-themed Wordle-style game.
+
+Guess the hidden Bible word within **six attempts**.
+
+### Features
+
+* 4–7 letter word lengths
+* Bible-specific vocabulary
+* Books, people, places, prophets, kings, women, tribes, feasts, artifacts, and more
+* Arabic-aware letter matching
+* Duplicate-letter handling
+* On-screen Arabic keyboard
+* Physical keyboard support
+* Timer and scoring
+* Haptic feedback where supported
+* Persistent game state
+
+The Arabic matching system normalizes common character variations so that equivalent forms such as:
+
+`أ / ا`
+`ة / ه`
+`ى / ي`
+
+can be handled consistently.
+
+---
+
+## 🃏 Who Am I?
+
+A Bible character flash-card game.
+
+Each card provides a clue about a person from the Bible. Flip the card to reveal the answer.
+
+### Difficulty Levels
+
+**سهل — Easy**
+Well-known Biblical figures.
+
+**متوسط — Medium**
+Less obvious Old and New Testament figures.
+
+**صعب — Hard**
+More obscure Biblical characters.
+
+The current dataset contains **114 curated Biblical characters**, organized by categories such as prophets, kings, apostles, women, and others.
+
+Players can self-grade each card:
+
+* ✓ عرفتها
+* ✗ لم أعرفها
+
+The game calculates the percentage of characters recognized by the player.
+
+On mobile devices, flipped cards can also be graded using swipe gestures.
+
+---
+
+## 😀 EmojiVerse
+
+Decode Bible stories, events, miracles, parables, visions, and verses using emojis.
+
+For example:
+
+> 🍎 🐍 🌳
+
+Players flip the card to reveal the Biblical answer and a short explanation.
+
+### Features
+
+* Three difficulty levels
+* Curated Bible stories and events
+* Story categories
+* Self-grading
+* Score tracking
+* Mobile swipe gestures
+* Persistent difficulty selection
+
+The current dataset contains **62 curated EmojiVerse cards**.
+
+---
+
+# 🏗️ Architecture
+
+VerseUp Arena is intentionally built as a **modular static web application**.
+
+The application does not require a backend server or build pipeline.
 
 ```text
 bible-quote-generator/
-├── index.html                       ← home launcher
-├── pages/
-│   ├── quote.html / memory.html / reverse.html / scramble.html
-│   └── whoami.html / wordle.html / emojiverse.html
 │
-├── css/
-│   ├── base.css                     ← design tokens (dark/light), reset, footer, splash
-│   ├── components.css               ← reusable swatches, panels, action buttons
-│   ├── layout.css                   ← page sections, responsive media queries, mobile polish
-│   ├── navigation.css               ← top navbar (desktop + hamburger)
-│   ├── home.css / quote.css         ← page-specific styles
-│   └── games/
-│       ├── common.css               ← shared game components (headers, stats, flip cards)
-│       └── memory.css / reverse.css / scramble.css / whoami.css / wordle.css / emojiverse.css
-│
-├── js/
-│   ├── app.js                       ← app shell: shared state, page dispatcher, mixin composition
-│   ├── services/
-│   │   ├── bible-api.js             ← API client + smart search logic
-│   │   ├── i18n.js                  ← internationalization (AR/EN)
-│   │   └── storage.js               ← safe localStorage helpers + key registry
-│   ├── data/
-│   │   ├── bible-database.js        ← offline book metadata (aligned to API names)
-│   │   └── games/
-│   │       ├── whoami-data.js       ← "Who Am I?" card pools
-│   │       ├── emojiverse-data.js   ← EmojiVerse card pools
-│   │       └── wordle-data.js       ← HolyWordle limits + keyboard rows
-│   ├── features/
-│   │   ├── quote/
-│   │   │   ├── quote-feature.js     ← page wiring + verse selection (facade)
-│   │   │   ├── quote-renderer.js    ← canvas rendering, fonts, PNG download
-│   │   │   └── quote-search.js      ← smart search UI
-│   │   └── games/
-│   │       ├── memory-game.js       ← memory game logic
-│   │       ├── reverse-game.js      ← reverse-words game
-│   │       ├── scramble-game.js     ← scrambled-words game
-│   │       ├── whoami-game.js       ← Who-Am-I? flash-card game
-│   │       ├── wordle-game.js       ← HolyWordle guessing game
-│   │       ├── emojiverse-game.js   ← EmojiVerse emoji flash-card game
-│   │       └── game-utils.js        ← shared Arabic normalization, scramble, reverse, term pools
-│   └── shared/
-│       ├── navbar.js                ← responsive hamburger menu
-│       ├── theme.js                 ← dark/light toggle (persisted via storage service)
-│       └── navigation.js            ← view switching + home launcher routing
+├── index.html
+├── styles.css
+├── package.json
+├── vercel.json
+├── sitemap.xml
+├── robots.txt
 │
 ├── assets/
-│   ├── images/                      ← verseup_logo.png, logo.png, og-image.png
-│   ├── icons/                       ← logo.svg (canvas watermark)
-│   └── fonts/
+│   ├── logo.svg
+│   ├── verseup_logo.png
+│   └── og-image.png
+│
+├── js/
+│   ├── main.js
+│   │
+│   ├── core/
+│   │   ├── bible-api.js
+│   │   ├── bible-database.js
+│   │   └── i18n.js
+│   │
+│   └── features/
+│       ├── quote-feature.js
+│       │
+│       └── games/
+│           ├── memory-game.js
+│           ├── reverse-game.js
+│           ├── scramble-game.js
+│           ├── whoami-game.js
+│           ├── wordle-game.js
+│           ├── emojiverse-game.js
+│           └── game-utils.js
+│
 └── tests/
 ```
 
-`js/app.js` is the thin shell that owns shared state and dispatches per page (`<body data-page="…">`). All feature logic lives in the mixin modules, composed via `Object.assign`; shared UI concerns (navbar, theme, navigation) live in `js/shared/`. CSS is loaded per page: `base → components → layout → navigation` plus the page's own stylesheet (games also load `games/common.css`).
+### Design Principles
 
-## Features
+The codebase separates the application into three main layers:
 
-### Quote Generator
+**Core**
 
-- Browse verses by book → chapter → verse dropdowns
-- Smart search bar (see Search section below)
-- Clicking a search result immediately generates the image — no extra button press needed
-- 1080×1080 canvas output with decorative border and cross symbols
-- 12 Arabic font choices (Thuluth Deco, Amiri, Aref Ruqaa, Reem Kufi, Lateef, Scheherazade, Noto Naskh, Markazi Text, Katibeh, Mirza, Harmattan, Diwan Kufi)
-- 7 background styles (gradients + solid colors)
-- Optional logo overlay with automatic light/dark contrast handling
-- Download as PNG with Arabic reference in filename
+Responsible for shared functionality such as Bible API communication, Bible metadata, and internationalization.
 
-### Smart Search
+**Features**
 
-Four search modes, resolved in priority order:
+Contains user-facing functionality such as the verse generator and games.
 
-| Input example | Behaviour |
-|---|---|
-| `يوحنا 3:16` | Returns that exact verse |
-| `يوحنا 3` | Returns all chapters whose number starts with `3` (ch 3, 13, 21…), each expandable |
-| `يوحنا` | Returns all chapters of John, each expandable |
-| `الرب راعي` | Full-text search across all ~31 000 verses |
+**Utilities**
 
-Chapter results show a **▼ expand arrow** — clicking opens an inline verse list for that chapter. Clicking any verse loads it and generates the image immediately. Keyboard: `↑ ↓` to navigate, `Enter` to select a verse result, `Escape` to close.
+Contains reusable logic such as Arabic normalization, word scrambling, reversing, term pools, and difficulty handling.
 
-### Memory Game
+`main.js` acts primarily as the application shell responsible for initialization and event wiring, while feature-specific logic remains inside dedicated modules.
 
-- Pick a specific verse or a random one
-- Words hidden by difficulty ratio (easy 20 % → expert 60 %)
-- Fill blanks by typing **or** tapping the **word-bank chips** below the verse (shuffled, tap-to-fill, no typing needed on phones)
-- When every blank is correct the round is **graded automatically** — no check click needed
-- Score, timer, next-verse progression
-- Last selected verse and difficulty saved and restored on reload
+---
 
-### Reverse Game
+# 🌐 Technology
 
-- **Starts the moment the page opens** — no start button
-- Choose books, names, places, or random
-- Read the reversed word, type the original
-- **Live auto-check**: the answer is graded on every keystroke — a correct answer jumps straight to the next word with no clicks at all
-- Time-bonus scoring: `max(10, 100 − seconds)` — faster answers score higher
-- `Enter` key still submits manually; "كلمة جديدة" works as a skip
-- Tracks score, timer; state persisted in `localStorage`
+VerseUp Arena is intentionally lightweight and uses browser-native technologies.
 
-### Scrambled Words Game
+| Technology              | Purpose                             |
+| ----------------------- | ----------------------------------- |
+| HTML5                   | Application structure               |
+| CSS3                    | Responsive UI and visual design     |
+| JavaScript (ES Modules) | Application logic                   |
+| Canvas API              | Verse image generation              |
+| LocalStorage            | Preferences, scores, and game state |
+| Vercel                  | Static deployment                   |
+| Bible API               | Arabic Scripture data               |
 
-- **Starts the moment the page opens** — no start button
-- Same curated term pool as the reverse game
-- Characters shuffled; solve by typing **or tapping the letter tiles** below the clue — spaces are inserted automatically between words, and a ⌫ tile erases
-- **Live auto-check**: correct answers advance automatically, zero clicks
-- Same time-bonus scoring model
-- `Enter` key still submits manually; "كلمة جديدة" works as a skip
-- Category and difficulty filtering; state persisted
+No frontend framework is required.
 
-### HolyWordle (Bible Wordle)
+There is also **no build step** and no package installation required to run the application locally.
 
-- **Starts the moment the page opens** — returning players resume the round saved from their last visit
-- Wordle-style guessing: find the secret Bible word within **six attempts**
-- **Selectable word length — 4, 5, 6, or 7 letters** — changing the length starts a fresh round immediately
-- Words come from the same curated term pools (books, names, places, prophets, kings, women, tribes, feasts, artifacts); single words only, de-duplicated
-- Standard Wordle coloring with duplicate-letter handling: 🟩 right letter & spot, 🟨 letter exists elsewhere, ⬛ letter not in the word
-- Arabic-aware letter matching (hamza variants, taa marbuta, diacritics are normalized) so أ/ا, ة/ه, ى/ي all match
-- Built-in Arabic on-screen keyboard plus physical keyboard support (`Enter` submits, `Backspace` deletes)
-- A **"كلمة جديدة" replay button appears inside the board** when a round ends — one tap to play again
-- Haptic feedback (vibration) on tile reveals and win/lose where supported
-- Keyboard keys light up with the best known status of each letter
-- Time-bonus scoring on win: `max(10, 100 − seconds)`; timer, category and remaining-attempts stats
-- Board, category, length and in-progress round are saved in `localStorage` and restored on reload
+---
 
-### Who Am I? (Flash Cards)
+# 📚 Bible Data
 
-- Each flash card shows a single clue about a person from the Bible
-- Click the card (or press `Enter`/`Space` on it) to flip it and reveal the person's name
-- **Three difficulty levels** — سهل (easy) / متوسط (medium) / صعب (hard):
-  - **Easy**: well-known figures (نوح، داود، موسى، بطرس…)
-  - **Medium**: deeper Old/New Testament people (جدعون، استفانوس، نيقوديموس…)
-  - **Hard**: obscure figures (ملك صادق، أبشالوم، كورنيليوس، حنانيا…)
-- 114 curated persons in total across the levels, each with a category (نبي، ملك، رسول، امرأة…)
-- Cards avoid repeating within a level until the whole pool has been seen, then the cycle restarts
-- **Scoring (self-graded)**: after flipping a card, choose **"✓ عرفتها"** (I knew it) or **"✗ لم أعرفها"** (I didn't know). The score = `(عرفتها ÷ إجمالي الإجابات) × 100` — the share of people you actually recognized
-- **No start screen** — the first card is ready the moment the page opens, and grading immediately loads the next card (fewer clicks, smoother flow)
-- **Phone gesture (RTL)**: swipe the flipped card **left = ✓ عرفتها, right = ✗ لم أعرفها** — grading becomes a single flick; tap still flips
-- The **"بطاقة جديدة"** button works as a skip: pull a different card without grading (skipped cards don't count toward the score)
-- Live counters for cards shown, "knew", and "didn't know"
-- Difficulty selection is saved in `localStorage` and restored on reload
+The application currently uses the **Arabic Smith & Van Dyck Bible text** provided through:
 
-### EmojiVerse (إيموجي آية)
+`https://api.getbible.net/v2/arabicsv.json`
 
-- Flash-card game: the **front of each card shows a set of emojis** hinting at a Bible story, event, miracle, parable, vision, or verse
-- Click the card (or press `Enter`/`Space` on it) to flip it and reveal **the answer plus a one-line story summary** with the reference
-- **Three difficulty levels** — سهل (easy) / متوسط (medium) / صعب (hard):
-  - **Easy**: famous stories everyone knows (🍎🐍🌳 آدم وحواء، 🌊➗🚶 انشقاق البحر…)
-  - **Medium**: familiar but needing a second look (🕊️⬇️🔊 معمودية يسوع، 🐎🔥🌪️ صعود إيليا…)
-  - **Hard**: deeper or less familiar references (✍️🏛️⚖️ الكتابة على الحائط، 🦴🦴💨 وادي العظام…)
-- 62 curated cards in total across the levels, each tagged with a category (قصة، حدث، معجزة، مثل، آية، رؤية)
-- Cards avoid repeating within a level until the whole pool has been seen, then the cycle restarts
-- **Self-graded scoring** identical to Who-Am-I?: "✓ عرفتها" / "✗ لم أعرفها", score = share of cards you knew
-- **No start screen** — the first card is ready on page open, and grading immediately loads the next card (fewer clicks, smoother flow)
-- **Phone gesture (RTL)**: swipe the flipped card **left = ✓ عرفتها, right = ✗ لم أعرفها**
-- The **"بطاقة جديدة"** button works as a skip: pull a different card without grading
-- Live counters for cards shown, "knew", and "didn't know"; difficulty saved in `localStorage`
+Bible book metadata is also maintained locally in:
 
-## Getting Started
+```text
+js/core/bible-database.js
+```
+
+This local database provides an offline metadata fallback used by the game systems.
+
+The book names are aligned with the API naming conventions to keep live Bible data and local game datasets consistent.
+
+---
+
+# 💾 Local Storage
+
+VerseUp Arena is designed to remember the player's experience without requiring an account or backend database.
+
+Depending on the feature, `localStorage` is used for:
+
+* Selected verses
+* Game difficulty
+* High scores
+* Timers and game state
+* HolyWordle progress
+* Selected categories
+* In-progress rounds
+* User preferences
+
+This allows players to leave the website and continue their experience later on the same browser.
+
+---
+
+# ⌨️ Keyboard & Mobile Interaction
+
+VerseUp Arena is designed to work across desktop and mobile devices.
+
+### Global
+
+| Shortcut       | Action                   |
+| -------------- | ------------------------ |
+| `Ctrl + Enter` | Generate verse image     |
+| `Ctrl + S`     | Download generated image |
+
+### Search
+
+| Shortcut | Action           |
+| -------- | ---------------- |
+| `↑ / ↓`  | Navigate results |
+| `Enter`  | Select result    |
+| `Escape` | Close results    |
+
+### Games
+
+| Shortcut    | Action                    |
+| ----------- | ------------------------- |
+| `Enter`     | Submit / interact         |
+| `Space`     | Flip flash cards          |
+| `Backspace` | Delete HolyWordle letters |
+| Swipe Left  | Mark card as known        |
+| Swipe Right | Mark card as unknown      |
+
+HolyWordle also supports an on-screen Arabic keyboard for mobile users.
+
+---
+
+# 📱 Mobile-First Interaction
+
+Several parts of VerseUp Arena are specifically designed for touch devices.
+
+The games support:
+
+* Large touch targets
+* On-screen keyboards
+* Tap-to-select word chips
+* Swipe gestures
+* Haptic feedback where supported
+* Responsive layouts
+* RTL Arabic interaction
+
+The goal is to make the games playable without requiring a physical keyboard.
+
+---
+
+# 🔍 SEO & Sharing
+
+VerseUp Arena includes metadata and assets for search engines and social sharing.
+
+The project includes:
+
+* `meta description`
+* Canonical URL
+* Open Graph metadata
+* Twitter Card metadata
+* `robots.txt`
+* `sitemap.xml`
+* JSON-LD structured data
+* Branded Open Graph image
+
+The website is designed so that links shared through platforms such as WhatsApp, Facebook, Instagram, and LinkedIn can display a branded preview card.
+
+---
+
+# 🚀 Running Locally
+
+Because VerseUp Arena is a static website, no build process is required.
+
+Clone the repository:
+
+```bash
+git clone https://github.com/MichaelMansour256/bible-quote-generator.git
+cd bible-quote-generator
+```
+
+Start a local HTTP server:
 
 ```bash
 python -m http.server 8000
 ```
 
-Then open `http://localhost:8000`.
+Then open:
 
-The app is fully static — no build step, no dependencies to install.
+```text
+http://localhost:8000
+```
 
-## Keyboard Shortcuts
+> Opening `index.html` directly may cause browser restrictions with ES modules. Using a local HTTP server is recommended.
 
-| Shortcut | Action |
-|---|---|
-| `Ctrl + Enter` | Generate image |
-| `Ctrl + S` | Download image (if generated) |
-| `Enter` (in reverse/scramble answer field) | Submit answer (correct answers also auto-advance while typing) |
-| `Enter` / `Space` (on Who-Am-I? / EmojiVerse card) | Flip the card |
-| Swipe left / right (on a flipped Who-Am-I? / EmojiVerse card) | Grade: knew / didn't know |
-| `Enter` / letters / `Backspace` (on HolyWordle page) | Submit row / type / erase letters |
-| `↑ / ↓` (in search) | Navigate results |
-| `Enter` (in search, verse result) | Load verse + generate image |
-| `Escape` (in search) | Close results |
+---
 
-## Deployment, SEO & Link Sharing
+# ☁️ Deployment
 
-The site is fully static — deployed to **https://verse-up-arena.vercel.app** (Vercel). Steps for Google + rich link cards:
+VerseUp Arena can be deployed directly as a static site.
 
-1. **Deploy** any changes to the site (all URLs already point to `https://verse-up-arena.vercel.app`).
-2. **Verify the share card**:
-   - Facebook/Instagram: `https://developers.facebook.com/tools/debug/`
-   - LinkedIn: `https://www.linkedin.com/post-inspector/`
-   - WhatsApp: paste the link into a chat — the card with the logo (`assets/images/og-image.png`, 1200×630) appears automatically.
-   - Sometimes the caches need a few minutes; the debug tools prompt a re-scrape.
-3. **Submit to Google**:
-   - Google Search Console → add your property → request indexing.
-   - Wait for Google to crawl; `sitemap.xml` + `robots.txt` (both included) speed this up.
+The production deployment currently runs on **Vercel**:
 
-What was added: `meta description`/`keywords`/`robots`/`canonical`, Open Graph tags (`og:*`), Twitter card tags (`twitter:*`), `application/ld+json` WebSite/Organization schema (used by Google for the site name + logo in results), `assets/og-image.png` (branded share-card image), `sitemap.xml`, `robots.txt`.
+https://verse-up-arena.vercel.app
 
-## Data Source
-- Bible text: Arabic Smith & Van Dyck via `https://api.getbible.net/v2/arabicsv.json`
-- Book metadata: `js/data/bible-database.js` (used as offline fallback in `js/features/games/game-utils.js`)
-- Book names in `js/data/bible-database.js` are aligned to the API names (e.g. `تكوين`, `1 صموئيل`) so the fallback term pool matches live data
+No backend server is required.
 
-## Code Notes
+A deployment can be performed by connecting the GitHub repository to Vercel or by deploying the static project through the Vercel CLI.
 
-- Font lookup uses a single `FONT_MAP` constant in `js/features/quote/quote-renderer.js` — no repeated switch-cases
-- Arabic normalization (diacritics, alef variants, taa marbuta) is centralised in `js/features/games/game-utils.js`
-- `matchesDifficulty` is defined once in `js/features/games/game-utils.js` and imported where needed
-- Game content (card pools, keyboard rows) lives in `js/data/games/` so it stays separate from game logic
-- Search dropdown closes on `mousedown` (not `click`) so item handlers fire before the close handler
-- Chapter expand/collapse is DOM-local state — highlight changes never rebuild the list
+---
+
+# 🧩 Extending the Project
+
+The modular architecture makes it straightforward to add new features.
+
+### Adding a New Game
+
+Create a new module under:
+
+```text
+js/features/games/
+```
+
+Then implement the game-specific logic without modifying unrelated games.
+
+Shared functionality should be placed in:
+
+```text
+js/features/games/game-utils.js
+```
+
+This keeps common Arabic processing and game utilities centralized.
+
+### Adding a New Verse Feature
+
+Verse-related functionality belongs in:
+
+```text
+js/features/quote-feature.js
+```
+
+Core Bible API functionality belongs in:
+
+```text
+js/core/bible-api.js
+```
+
+This separation helps prevent API logic from becoming tightly coupled to the UI.
+
+---
+
+# 🧠 Arabic Text Handling
+
+Arabic presents several challenges for word-based games, especially when comparing user input.
+
+VerseUp Arena centralizes Arabic normalization to handle common differences such as:
+
+* Arabic diacritics
+* Alef variants
+* Taa Marbuta
+* Yaa / Alef Maqsura variants
+* Other normalization requirements used by the games
+
+The normalization logic is shared across games instead of being duplicated inside individual modules.
+
+---
+
+# 🧪 Project Structure Philosophy
+
+VerseUp Arena follows a few simple principles:
+
+* **Keep the application static whenever possible**
+* **Separate core services from UI features**
+* **Keep each game independent**
+* **Reuse shared game utilities**
+* **Centralize Arabic normalization**
+* **Persist useful state locally**
+* **Design interactions for both desktop and mobile**
+* **Avoid unnecessary frameworks and infrastructure**
+
+The result is a small, portable application that can be hosted almost anywhere.
+
+---
+
+# 🗺️ Roadmap
+
+Possible future improvements include:
+
+* [ ] More Bible games
+* [ ] Additional Arabic Bible datasets / translations
+* [ ] Expanded Bible character and story databases
+* [ ] More verse image templates
+* [ ] Custom image themes
+* [ ] Improved accessibility
+* [ ] More detailed game statistics
+* [ ] Optional user accounts and cloud progress
+* [ ] Multiplayer / competitive game modes
+* [ ] PWA / installable mobile experience
+
+---
+
+# 🤝 Contributing
+
+Contributions, suggestions, bug reports, and new game ideas are welcome.
+
+If you would like to contribute:
+
+1. Fork the repository
+2. Create a feature branch
+
+```bash
+git checkout -b feature/my-new-feature
+```
+
+3. Make your changes
+4. Test the application locally
+5. Commit your changes
+
+```bash
+git commit -m "Add new feature"
+```
+
+6. Push your branch
+
+```bash
+git push origin feature/my-new-feature
+```
+
+7. Open a Pull Request
+
+For larger changes, opening an issue first is recommended so the proposed direction can be discussed.
+
+---
+
+# 📄 License
+
+This repository does not currently specify a formal open-source license.
+
+Unless a license is added to the repository, the source code should be treated as **all rights reserved**.
+
+If the project is intended to be open source, adding an explicit license such as MIT is recommended before accepting external contributions.
+
+---
+
+# 🙏 Purpose
+
+VerseUp Arena was created with a simple idea:
+
+> **Make engaging with Scripture more interactive.**
+
+Whether someone is searching for a verse, creating an image to share, memorizing Scripture, or playing a Bible game with friends, VerseUp Arena brings these experiences together in one place.
+
+---
+
+## 👨‍💻 Author
+
+**Michael Mansour**
+
+AI Engineer & Software Developer
+
+GitHub:
+https://github.com/MichaelMansour256
+
+---
+
+## ⭐ Support the Project
+
+If you find VerseUp Arena useful, consider giving the repository a ⭐ on GitHub.
+
+It helps the project reach more people and encourages continued development.
+
+**VerseUp Arena — Explore. Play. Remember. Share.**
