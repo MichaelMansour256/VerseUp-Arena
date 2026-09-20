@@ -11,7 +11,11 @@ const PRECACHE_URLS = [
     '/css/navigation.css', '/css/home.css', '/css/quote.css',
     '/css/games/common.css', '/css/games/memory.css', '/css/games/reverse.css',
     '/css/games/scramble.css', '/css/games/whoami.css', '/css/games/wordle.css',
-    '/css/games/emojiverse.css', '/css/games/crossword.css'
+    '/css/games/emojiverse.css', '/css/games/crossword.css',
+    '/assets/images/pwa-192x192.png', '/assets/images/pwa-512x512.png',
+    '/assets/images/pwa-512x512-maskable.png', '/assets/icons/logo.svg',
+    '/assets/images/verseup_logo.png', '/assets/images/logo.png',
+    '/assets/images/og-image.png', '/manifest.webmanifest'
 ];
 
 self.addEventListener('install', (event) => {
