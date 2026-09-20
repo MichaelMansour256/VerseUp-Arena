@@ -437,47 +437,85 @@
     }
 }
 
-/* Multi-Verse Mode Controls */
+/* -- Multi-verse (range) mode ---------------------------------------------
+   The toggle, the range fields it reveals and the action button live in one
+   column and stay in that order, so switching the range on never pushes the
+   "load verse" button away from the fields being filled in. */
 .verse-range-group {
-    margin-top: 12px;
+    margin-top: 4px;
+    padding: 10px 12px 12px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.04);
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+/* app.js puts .multi-verse-active on .book-chapter-controls. */
+.book-chapter-controls.multi-verse-active .verse-range-group {
+    border-color: var(--accent-2);
+    background: rgba(91, 140, 255, 0.10);
 }
 
 .verse-range-group .checkbox-label {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
+    margin: 0;
+    padding: 6px 8px;
     cursor: pointer;
-    padding: 8px 12px;
-    background: rgba(255,255,255,0.05);
     border-radius: 8px;
     transition: background 0.2s ease;
 }
 
+.book-chapter-controls.multi-verse-active .verse-range-group .checkbox-label {
+    color: var(--text-strong);
+}
+
 .verse-range-group .checkbox-label:hover {
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.08);
 }
 
 .verse-range-group input[type="checkbox"] {
+    flex: 0 0 auto;
     width: 20px;
     height: 20px;
+    padding: 0;
     cursor: pointer;
     accent-color: var(--accent-2);
 }
 
+.range-hint {
+    margin: 2px 8px 0;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+}
+
+/* Once the mode is on, the fields explain themselves. */
+.book-chapter-controls.multi-verse-active .range-hint {
+    display: none;
+}
+
+/* Range fields stay in the same card, divided by a hairline instead of
+   opening a second box: fewer borders and less height to scroll. */
 .verse-range-controls {
-    margin-top: 12px;
-    padding: 12px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 8px;
-    border: 1px solid var(--line);
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--line);
+}
+
+.verse-range-controls .range-selects {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
 }
 
 .verse-range-controls .input-group {
-    margin-bottom: 8px;
+    gap: 6px;
 }
 
-.verse-range-controls .input-group:last-child {
-    margin-bottom: 0;
+.verse-range-controls .input-group label {
+    font-size: 0.95rem;
 }
 
 .verse-range-controls select {
@@ -491,27 +529,8 @@
     color: var(--input-color);
 }
 
-/* Hide single verse select when in multi-verse mode */
-.multi-verse-active .single-verse-group {
-    display: none;
-}
-
-/* Range layout: side-by-side on desktop, stacked on narrow screens */
-.verse-range-controls .range-selects {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-}
-
-.range-hint {
-    margin: 6px 0 0;
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    line-height: 1.6;
-}
-
 .range-preview {
-    margin: 8px 0 0;
+    margin: 10px 0 0;
     font-size: 0.9rem;
     font-weight: 600;
     color: var(--accent);
@@ -520,15 +539,37 @@
     word-break: break-word;
 }
 
-@media (max-width: 560px) {
-    .verse-range-controls .range-selects {
-        grid-template-columns: 1fr;
-    }
+/* Hide single verse select when in multi-verse mode */
+.multi-verse-active .single-verse-group {
+    display: none;
 }
 
 /* Show range controls only in multi-verse mode */
 .verse-range-controls.hidden {
     display: none;
+}
+
+/* Action group: directly under the fields it submits. */
+.verse-selection-actions {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Phones: keep from/to on one row (values such as "from 1" / "to 16" are
+   short) and trim the card padding so the button stays on the same screen. */
+@media (max-width: 560px) {
+    .verse-range-group {
+        padding: 8px 10px 10px;
+    }
+
+    .verse-range-controls .range-selects {
+        gap: 8px;
+    }
+
+    .verse-range-controls select {
+        padding: 10px 8px;
+        font-size: 0.95rem;
+    }
 }
 
 .loading::after {
