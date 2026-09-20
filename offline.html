@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>غير متصل — VerseUp Arena</title>
+    <meta name="description" content="أنت غير متصل بالإنترنت. ما زال بعض المحتوى متاحًا.">
+    <meta name="theme-color" content="#0d1b2e">
+    <link rel="icon" type="image/png" href="assets/images/verseup_logo.png">
+    <style>
+        :root {
+            --bg-0: #07111f;
+            --bg-1: #0d1b2e;
+            --bg-2: #14263d;
+            --text: #e8eef7;
+            --text-strong: #ffffff;
+            --text-muted: #aac0da;
+            --accent: #d4a855;
+            --accent-2: #5b8cff;
+            --line: rgba(255, 255, 255, 0.1);
+            --container-bg: rgba(10, 18, 31, 0.84);
+            --container-border: rgba(255, 255, 255, 0.06);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: 
+                radial-gradient(circle at top left, rgba(91, 140, 255, 0.30), transparent 35%),
+                radial-gradient(circle at bottom right, rgba(212, 168, 85, 0.22), transparent 38%),
+                linear-gradient(135deg, var(--bg-0) 0%, var(--bg-1) 50%, var(--bg-2) 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: var(--text);
+        }
+
+        .offline-container {
+            max-width: 480px;
+            width: 100%;
+            text-align: center;
+            background: var(--container-bg);
+            border-radius: 20px;
+            padding: 40px 30px;
+            border: 1px solid var(--container-border);
+            box-shadow: 0 24px 50px rgba(1, 8, 18, 0.35);
+        }
+
+        .offline-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .offline-title {
+            font-family: 'Amiri', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-strong);
+            margin-bottom: 12px;
+        }
+
+        .offline-message {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            line-height: 1.7;
+            margin-bottom: 24px;
+        }
+
+        .retry-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--accent-2) 0%, #7f5af0 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 999px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .retry-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(91, 140, 255, 0.4);
+        }
+
+        .offline-footer {
+            margin-top: 24px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .offline-footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-container" role="main" aria-label="حالة عدم الاتصال">
+        <span class="offline-icon" aria-hidden="true">📡</span>
+        
+        <h1 class="offline-title">غير متصل بالإنترنت</h1>
+        <p class="offline-message">
+            يبدو أنك غير متصل بالإنترنت حاليًا. لا يزال بإمكانك الوصول إلى بعض المحتوى المخزن محليًا.
+        </p>
+        
+        <button class="retry-btn" onclick="window.location.reload()" aria-label="إعادة التحقق من الاتصال">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M23 4v6h-6M1 20v-6h6"/>
+                <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+            </svg>
+            إعادة التحقق من الاتصال
+        </button>
+        
+        <div class="offline-footer">
+            <p>تطبيق <a href="/">VerseUp Arena</a></p>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('online', () => {
+            window.location.reload();
+        });
+
+        if ('vibrate' in navigator) {
+            navigator.vibrate(100);
+        }
+    </script>
+</body>
+</html>

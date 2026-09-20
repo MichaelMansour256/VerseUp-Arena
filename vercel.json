@@ -1,60 +1,27 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
-
   "rewrites": [
-    {
-      "source": "/quote",
-      "destination": "/pages/quote.html"
-    },
-    {
-      "source": "/memory",
-      "destination": "/pages/memory.html"
-    },
-    {
-      "source": "/reverse",
-      "destination": "/pages/reverse.html"
-    },
-    {
-      "source": "/scramble",
-      "destination": "/pages/scramble.html"
-    },
-    {
-      "source": "/whoami",
-      "destination": "/pages/whoami.html"
-    },
-    {
-      "source": "/wordle",
-      "destination": "/pages/wordle.html"
-    },
-    {
-      "source": "/emojiverse",
-      "destination": "/pages/emojiverse.html"
-    }
+    { "source": "/quote", "destination": "/pages/quote.html" },
+    { "source": "/memory", "destination": "/pages/memory.html" },
+    { "source": "/reverse", "destination": "/pages/reverse.html" },
+    { "source": "/scramble", "destination": "/pages/scramble.html" },
+    { "source": "/whoami", "destination": "/pages/whoami.html" },
+    { "source": "/wordle", "destination": "/pages/wordle.html" },
+    { "source": "/emojiverse", "destination": "/pages/emojiverse.html" },
+    { "source": "/crossword", "destination": "/pages/crossword.html" }
   ],
-
   "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "X-Frame-Options",
-          "value": "ALLOW-FROM https://e3dady-ccen.vercel.app"
-        },
-        {
-          "key": "Content-Security-Policy",
-          "value": "frame-ancestors https://e3dady-ccen.vercel.app http://localhost:3000"
-        },
-        {
-          "key": "Referrer-Policy",
-          "value": "strict-origin-when-cross-origin"
-        }
-      ]
-
-
-
-
-
-    }
+    { "source": "/manifest.webmanifest", "headers": [{ "key": "Content-Type", "value": "application/manifest+json" }] },
+    { "source": "/service-worker.js", "headers": [{ "key": "Content-Type", "value": "application/javascript; charset=utf-8" }, { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }] },
+    { "source": "/offline.html", "headers": [{ "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }] },
+    { "source": "/(.*)\\.js$", "headers": [{ "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }] },
+    { "source": "/(.*)\\.css$", "headers": [{ "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }] },
+    { "source": "/(.*)\\.(png|jpg|jpeg|svg|webp|ico)$", "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }] },
+    { "source": "/(.*)", "headers": [
+      { "key": "X-Frame-Options", "value": "ALLOW-FROM https://e3dady-ccen.vercel.app" },
+      { "key": "Content-Security-Policy", "value": "frame-ancestors https://e3dady-ccen.vercel.app http://localhost:3000" },
+      { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+    ]}
   ]
 }

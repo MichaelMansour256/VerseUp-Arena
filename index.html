@@ -2,17 +2,134 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0, user-scalable=yes">
     <title>VerseUp Arena — بطاقات آيات الكتاب المقدس والألعاب</title>
     <meta name="description" content="اختر الميزة التي تريدها: بطاقات الاقتباسات، لعبة الحفظ، الكلمات المعكوسة، الكلمات المبعثورة، من أنا؟، هولي ووردل، وإيموجي آية.">
     <meta name="theme-color" content="#0d1b2e">
-    <link rel="icon" type="image/png" href="assets/images/verseup_logo.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="VerseUp">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <link rel="icon" type="image/png" href="/assets/images/verseup_logo.png">
+    <link rel="apple-touch-icon" href="/assets/icons/pwa-192x192.png">
+    <link rel="apple-touch-startup-image" href="/assets/icons/pwa-512x512.png">
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/layout.css">
     <link rel="stylesheet" href="css/navigation.css">
     <link rel="stylesheet" href="css/home.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&family=Amiri:wght@400;700&family=Aref+Ruqaa:wght@400;700&family=Reem+Kufi:wght@400;700&family=Lateef:wght@400;700&family=Scheherazade:wght@400;700&family=Noto+Naskh+Arabic:wght@400;700&family=Changa:wght@400;700&family=Cairo:wght@400;700&family=Markazi+Text:wght@400;700&family=Katibeh:wght@400;700&family=Mirza:wght@400;700&family=Harmattan:wght@400;700&family=El+Messiri:wght@400;700&family=Diwan+Kufi:wght@400;700&family=Thuluth+Deco:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* PWA Install Banner Styles */
+        .install-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: linear-gradient(135deg, var(--header-bg-0) 0%, var(--header-bg-1) 55%, var(--header-bg-2) 100%);
+            border-top: 1px solid var(--line-strong);
+            padding: 16px 20px;
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+            box-shadow: 0 -8px 30px rgba(0,0,0,0.3);
+        }
+        
+        .install-banner.visible {
+            display: flex;
+        }
+        
+        .install-banner-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .install-banner-text {
+            color: var(--text);
+            font-size: 0.95rem;
+        }
+        
+        .install-banner-title {
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: var(--text-strong);
+        }
+        
+        .install-banner-desc {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        
+        .install-banner-actions {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        
+        .install-btn {
+            background: linear-gradient(135deg, var(--accent-2) 0%, #7f5af0 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            white-space: nowrap;
+        }
+        
+        .install-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(91, 140, 255, 0.4);
+        }
+        
+        .install-btn:active {
+            transform: translateY(0);
+        }
+        
+        .dismiss-btn {
+            background: transparent;
+            border: 1px solid var(--line-strong);
+            color: var(--text-muted);
+            padding: 10px 16px;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+        
+        .dismiss-btn:hover {
+            border-color: var(--text-muted);
+            color: var(--text);
+        }
+        
+        /* iOS standalone mode adjustments */
+        @media (display-mode: standalone) {
+            .install-banner {
+                display: none !important;
+            }
+        }
+        
+        /* Safe area insets for notched devices */
+        .container {
+            padding-top: calc(20px + env(safe-area-inset-top));
+            padding-bottom: calc(20px + env(safe-area-inset-bottom));
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding-top: calc(10px + env(safe-area-inset-top));
+                padding-bottom: calc(10px + env(safe-area-inset-bottom));
+            }
+        }
+    </style>
 </head>
 <body data-page="home">
         <div id="splash">
@@ -24,6 +141,19 @@
         </div>
     </div>
     <div class="container">
+        <!-- PWA Install Banner -->
+        <div class="install-banner" id="install-banner" role="dialog" aria-label="تثبيت تطبيق VerseUp Arena">
+            <div class="install-banner-content">
+                <div class="install-banner-text">
+                    <div class="install-banner-title" data-i18n="install-title">ثبّت VerseUp Arena</div>
+                    <div class="install-banner-desc" data-i18n="install-desc">احصل على تجربة تطبيق كامل دون متصفح. اعمل بدون إنترنت وافتح من الشاشة الرئيسية.</div>
+                </div>
+                <div class="install-banner-actions">
+                    <button class="dismiss-btn" id="dismiss-install" aria-label="إغلاق هذه الرسالة">تlater</button>
+                    <button class="install-btn" id="install-btn" aria-label="تثبيت تطبيق VerseUp Arena">تثبيت</button>
+                </div>
+            </div>
+        </div>
 
     <nav class="navbar" aria-label="التنقل الرئيسي">
         <a class="navbar-brand" href="index.html">
@@ -114,6 +244,7 @@
         <script src="js/data/bible-database.js"></script>
     <script src="js/services/bible-api.js"></script>
     <script src="js/services/i18n.js"></script>
+    <script src="js/pwa.js"></script>
     <script type="module" src="js/app.js"></script>
 </body>
 </html>

@@ -776,6 +776,11 @@ Object.assign(
 
 document.addEventListener('DOMContentLoaded', () => {
     new BibleQuoteGenerator();
+    
+    // Initialize PWA features
+    if (typeof initializePWA === 'function') {
+        initializePWA();
+    }
 });
 
 document.addEventListener('keydown', (e) => {

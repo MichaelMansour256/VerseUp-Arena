@@ -2,11 +2,17 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0, user-scalable=yes">
     <title>الكلمات المعكوسة — VerseUp Arena</title>
     <meta name="description" content="اختر الفئة واقرأ الكلمة المعكوسة واكتب الإجابة الصحيحة بسرعة.">
     <meta name="theme-color" content="#0d1b2e">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="VerseUp">
+    <link rel="manifest" href="/manifest.webmanifest">
     <link rel="icon" type="image/png" href="../assets/images/verseup_logo.png">
+    <link rel="apple-touch-icon" href="/assets/icons/pwa-192x192.png">
     <link rel="stylesheet" href="../css/base.css">
     <link rel="stylesheet" href="../css/components.css">
     <link rel="stylesheet" href="../css/games/common.css">
@@ -137,6 +143,7 @@
         <script src="../js/data/bible-database.js"></script>
     <script src="../js/services/bible-api.js"></script>
     <script src="../js/services/i18n.js"></script>
+    <script src="../js/pwa.js"></script>
     <script type="module" src="../js/app.js"></script>
 </body>
 </html>

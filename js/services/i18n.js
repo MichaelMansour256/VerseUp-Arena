@@ -54,6 +54,12 @@ const TRANSLATIONS = {
         'preview-title':        'المعاينة',
         'success-msg':          'الصورة اتعملت بنجاح!',
 
+        // PWA
+        'install-title':        'ثبّت VerseUp Arena',
+        'install-desc':         'احصل على تجربة تطبيق كامل دون متصفح. شغّل بدون إنترنت وافتح من الشاشة الرئيسية.',
+        'btn-install':          'تثبيت',
+        'btn-dismiss':          'لاحقًا',
+
         'memory-title':         'احفظ الآية',
         'memory-desc':          'هنخفي شوية كلمات من الآية، وإنت حاول تكمّلها من ذاكرتك وشوف نتيجتك.',
         'score-label':          'النقاط',
@@ -375,6 +381,12 @@ const TRANSLATIONS = {
         'nav-short-emojiverse':     'Emoji',
 
         'footer-note':          'Designed and developed by Michael Mansour',
+
+        // PWA install
+        'install-title':         'Install VerseUp Arena',
+        'install-desc':          'Get the full app experience without the browser. Works offline and opens from your home screen.',
+        'btn-install':           'Install',
+        'btn-dismiss':           'Later',
     }
 };
 
