@@ -437,10 +437,68 @@
     }
 }
 
-/* Loading state */
-.loading {
-    position: relative;
-    overflow: hidden;
+/* Multi-Verse Mode Controls */
+.verse-range-group {
+    margin-top: 12px;
+}
+
+.verse-range-group .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 8px 12px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 8px;
+    transition: background 0.2s ease;
+}
+
+.verse-range-group .checkbox-label:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+.verse-range-group input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: var(--accent-2);
+}
+
+.verse-range-controls {
+    margin-top: 12px;
+    padding: 12px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 8px;
+    border: 1px solid var(--line);
+}
+
+.verse-range-controls .input-group {
+    margin-bottom: 8px;
+}
+
+.verse-range-controls .input-group:last-child {
+    margin-bottom: 0;
+}
+
+.verse-range-controls select {
+    background: var(--base-input-bg);
+    color: var(--input-color);
+    border: 2px solid var(--input-border);
+}
+
+.verse-range-controls select option {
+    background: var(--select-option-bg);
+    color: var(--input-color);
+}
+
+/* Hide single verse select when in multi-verse mode */
+.multi-verse-active #verse-select {
+    display: none;
+}
+
+/* Show range controls only in multi-verse mode */
+.verse-range-controls.hidden {
+    display: none;
 }
 
 .loading::after {
