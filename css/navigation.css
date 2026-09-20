@@ -230,22 +230,55 @@
         flex-wrap: wrap;
         height: auto;
         min-height: 68px;
-        padding: 10px 16px;
+        padding: 10px 14px;
+        /* Tighter spacing so brand + controls + hamburger fit on one row. */
+        column-gap: 10px;
+        row-gap: 8px;
+    }
+
+    /* The brand is the flexible item: it shrinks (its label gets an ellipsis)
+       instead of pushing the hamburger onto a separate line. */
+    .navbar-brand {
+        order: 1;
+        /* flex-basis 0 (not auto) on purpose: flex line-breaking uses each item's
+           base size, so with "auto" the brand's full intrinsic width is counted
+           first and the controls + hamburger get wrapped onto a second row on
+           narrow phones. With a 0 base the brand just shrinks instead and its
+           label ellipsizes. */
+        flex: 1 1 0;
+        min-width: 0;
+        gap: 8px;
+    }
+
+    .navbar-brand img {
+        flex: 0 0 auto;
+        height: 32px;
     }
 
     .navbar-brand-text {
-        font-size: 1.15rem;
+        min-width: 0;
+        font-size: 1.05rem;
+        /* Latin brand name inside an RTL page: force LTR so the ellipsis trims
+           the END of "VerseUp Arena" instead of its beginning. */
+        direction: ltr;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Controls + hamburger stay together, pinned to the inline-end of the row
+       (left in RTL, right in LTR). */
+    .navbar-controls {
+        order: 2;
+        flex: 0 0 auto;
+        gap: 6px;
+        margin-inline-start: auto;
     }
 
     .navbar-toggle {
         display: flex;
-        margin-left: 0;
         order: 3;
-    }
-
-    .navbar-controls {
-        order: 2;
-        margin-left: auto;
+        flex: 0 0 auto;
+        margin-inline-start: 0;
     }
 
     .navbar-links {
@@ -255,7 +288,7 @@
         flex-direction: column;
         align-items: stretch;
         gap: 4px;
-        margin: 8px 0 4px;
+        margin: 0 0 4px;
         padding-top: 8px;
         border-top: 1px solid var(--line-strong);
     }

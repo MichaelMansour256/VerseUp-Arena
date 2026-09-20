@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0, user-scalable=yes">
-    <title>ØµÙØ­Ø© Ø¥Ù†Ø´Ø§Ø¡ Ø§Ù„Ø§Ù‚ØªØ¨Ø§Ø³ â€” VerseUp Arena</title>
-    <meta name="description" content="Ø£Ù†Ø´Ø¦ Ø¨Ø·Ø§Ù‚Ø§Øª Ø¢ÙŠØ§Øª Ø¥Ù†Ø¬ÙŠÙ„ÙŠØ© Ø¬Ù…ÙŠÙ„Ø© Ø¨Ø§Ù„Ø¹Ø±Ø¨ÙŠØ© ÙˆØ¬Ø§Ù‡Ø²Ø© Ù„Ù„Ø­ÙØ¸ ÙˆØ§Ù„Ù…Ø´Ø§Ø±ÙƒØ©.">
+    <title>VerseUp Arena</title>
+    <meta name="description" content="بطاقات آيات وألعاب كتابية متنوعة، كلها في مكان واحد">
     <meta name="theme-color" content="#0d1b2e">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -30,36 +30,36 @@
         <div class="splash-inner">
             <img src="../assets/images/verseup_logo.png" alt="VerseUp Arena" class="splash-logo">
             <div class="splash-title">VerseUp Arena</div>
-            <div class="splash-tag" data-i18n="splash-tag">Ø¨Ø·Ø§Ù‚Ø§ØªØŒ Ø¢ÙŠØ§ØªØŒ ÙˆØ£Ù„Ø¹Ø§Ø¨ ÙƒØªØ§Ø¨ÙŠØ© ÙÙŠ Ù…ÙƒØ§Ù† ÙˆØ§Ø­Ø¯</div>
+            <div class="splash-tag" data-i18n="splash-tag">بطاقات وآيات وألعاب كتابية — كلها في مكان واحد</div>
             <div class="splash-spinner" aria-hidden="true"></div>
         </div>
     </div>
     <div class="container">
 
-    <nav class="navbar" aria-label="Ø§Ù„ØªÙ†Ù‚Ù„ Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠ">
+    <nav class="navbar" aria-label="التنقل الرئيسي">
         <a class="navbar-brand" href="../index.html">
             <img src="../assets/images/verseup_logo.png" alt="VerseUp Arena">
             <span class="navbar-brand-text">VerseUp Arena</span>
         </a>
 
-        <button class="navbar-toggle" type="button" aria-label="Ø§Ù„Ù‚Ø§Ø¦Ù…Ø©" aria-expanded="false">
+        <button class="navbar-toggle" type="button" aria-label="القائمة" aria-expanded="false">
             <span></span><span></span><span></span>
         </button>
 
                 <ul class="navbar-links">
-            <li><a class="navbar-link" href="../index.html" data-i18n="nav-short-home">Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠØ©</a></li>
+            <li><a class="navbar-link" href="../index.html" data-i18n="nav-short-home">الرئيسية</a></li>
             <li class="navbar-games" id="navbar-games">
                 <button type="button" class="navbar-link navbar-games-toggle" aria-haspopup="true" aria-expanded="false">
-                    <span data-i18n="nav-short-games">Ø§Ù„Ø£Ù„Ø¹Ø§Ø¨</span>
+                    <span data-i18n="nav-short-games">الألعاب</span>
                     <span class="navbar-games-caret" aria-hidden="true">&#9662;</span>
                 </button>
-                <ul class="navbar-games-menu" id="navbar-games-menu" aria-label="Ø§Ù„Ø£Ù„Ø¹Ø§Ø¨"></ul>
+                <ul class="navbar-games-menu" id="navbar-games-menu" aria-label="الألعاب"></ul>
             </li>
         </ul>
 
         <div class="navbar-controls">
             <button id="lang-toggle" class="nav-btn" type="button" data-i18n="lang-toggle">EN</button>
-            <button id="theme-toggle" class="nav-btn" type="button" aria-label="ØªØ¨Ø¯ÙŠÙ„ Ø§Ù„Ù…Ø¸Ù‡Ø±">ðŸŒ™</button>
+            <button id="theme-toggle" class="nav-btn" type="button" aria-label="تبديل المظهر">🌙</button>
         </div>
     </nav>
 
@@ -68,44 +68,44 @@
         <main>
 <div class="view-panel quote-workspace" id="quote-view-panel">
             <section class="verse-selection-section">
-                <h2 data-i18n="select-verse-title">Ø§Ø®ØªØ± Ø§Ù„Ø¢ÙŠØ©</h2>
+                <h2 data-i18n="select-verse-title">اختر الآية</h2>
                 <div class="selection-controls">
                     <div class="book-chapter-controls">
                         <div class="input-group">
-                            <label for="book-select" data-i18n="label-book">Ø§Ø®ØªØ± Ø§Ù„Ø³ÙØ±:</label>
+                            <label for="book-select" data-i18n="label-book">اختر السفر:</label>
                             <select id="book-select">
-                                <option value="" data-i18n="opt-book">-- Ø§Ø®ØªØ± Ø³ÙØ± --</option>
+                                <option value="" data-i18n="opt-book">-- اختر سفر --</option>
                             </select>
                         </div>
 
                         <div class="input-group">
-                            <label for="chapter-select" data-i18n="label-chapter">Ø§Ù„Ø¥ØµØ­Ø§Ø­:</label>
+                            <label for="chapter-select" data-i18n="label-chapter">الإصحاح:</label>
                             <select id="chapter-select" disabled>
-                                <option value="" data-i18n="opt-chapter">-- Ø§Ø®ØªØ± Ø¥ØµØ­Ø§Ø­ --</option>
+                                <option value="" data-i18n="opt-chapter">-- اختر إصحاح --</option>
                             </select>
                         </div>
 
                         <div class="input-group single-verse-group">
                             <label for="verse-select" data-i18n="label-verse">الآية:</label>
                             <select id="verse-select" disabled>
-                                <option value="" data-i18n="opt-verse">-- Ø§Ø®ØªØ± Ø¢ÙŠØ© --</option>
+                                <option value="" data-i18n="opt-verse">-- اختر آية --</option>
                             </select>
                         </div>
 
-                        <button id="load-verse-btn" class="load-verse-btn" disabled data-i18n="load-verse-btn">ØªØ­Ù…ÙŠÙ„ Ø§Ù„Ø¢ÙŠØ©</button>
+                        <button id="load-verse-btn" class="load-verse-btn" disabled data-i18n="load-verse-btn">تحميل الآية</button>
                         <div class="quote-nav-row">
-                            <button id="quote-prev-btn" class="quote-nav-btn" type="button" disabled data-i18n="prev-verse-btn">Ø§Ù„Ø¢ÙŠØ© Ø§Ù„Ø³Ø§Ø¨Ù‚Ø©</button>
-                            <button id="quote-next-btn" class="quote-nav-btn" type="button" disabled data-i18n="next-verse-btn">Ø§Ù„Ø¢ÙŠØ© Ø§Ù„ØªØ§Ù„ÙŠØ©</button>
+                            <button id="quote-prev-btn" class="quote-nav-btn" type="button" disabled data-i18n="prev-verse-btn">الآية السابقة</button>
+                            <button id="quote-next-btn" class="quote-nav-btn" type="button" disabled data-i18n="next-verse-btn">الآية التالية</button>
                         </div>
                     </div>
 
                     <div class="search-control">
                         <div class="input-group">
-                            <label for="verse-search" data-i18n="label-search">Ø§Ù„Ø¨Ø­Ø« ÙÙŠ Ø§Ù„Ø¢ÙŠØ§Øª:</label>
-                            <input type="text" id="verse-search" data-i18n-placeholder="search-placeholder" placeholder="Ø§Ø¨Ø­Ø« ÙÙŠ Ø§Ù„Ù†Øµ Ø£Ùˆ Ø§Ù„Ù…Ø±Ø¬Ø¹ Ù…Ø«Ù„ ÙŠÙˆØ­Ù†Ø§ 3:16">
+                            <label for="verse-search" data-i18n="label-search">البحث في الآيات:</label>
+                            <input type="text" id="verse-search" data-i18n-placeholder="search-placeholder" placeholder="ابحث في النص أو المرجع مثل يوحنا 3:16">
                             <div id="search-loading" class="loading-indicator search-loading hidden" aria-live="polite" aria-busy="true">
                                 <div class="spinner"></div>
-                                <p data-i18n="searching">Ø¬Ø§Ø±ÙŠ Ø§Ù„Ø¨Ø­Ø«...</p>
+                                <p data-i18n="searching">جاري البحث...</p>
                             </div>
                             <div id="search-results" class="search-results"></div>
                         </div>
@@ -142,73 +142,73 @@
 
             <section class="main-content-section">
                 <div class="controls-panel">
-                    <h3 data-i18n="controls-title">ØªØµÙ…ÙŠÙ… Ø§Ù„ØªØ­ÙƒÙ…</h3>
+                    <h3 data-i18n="controls-title">تصميم التحكم</h3>
                     
                     <div class="verse-preview">
                         <div class="input-group">
-                            <label for="verse-text" data-i18n="label-verse-text">Ù†Øµ Ø§Ù„Ø¢ÙŠØ©:</label>
-                            <textarea id="verse-text" data-i18n-placeholder="verse-placeholder" placeholder="Ø³ÙŠØªÙ… Ù…Ù„Ø¤Ù‡ ØªÙ„Ù‚Ø§Ø¦ÙŠØ§Ù‹ Ø¹Ù†Ø¯ Ø§Ø®ØªÙŠØ§Ø± Ø¢ÙŠØ©" rows="4" readonly></textarea>
+                            <label for="verse-text" data-i18n="label-verse-text">نص الآية:</label>
+                            <textarea id="verse-text" data-i18n-placeholder="verse-placeholder" placeholder="سيتم ملؤه تلقائياً عند اختيار آية" rows="4" readonly></textarea>
                             <div class="verse-text-actions">
-                                <button id="use-selection-btn" class="verse-action-btn" disabled data-i18n="use-selection-btn">âœ‚ Ø§Ø³ØªØ®Ø¯Ù… Ø§Ù„Ù…Ø­Ø¯Ø¯</button>
-                                <button id="restore-verse-btn" class="verse-action-btn" disabled data-i18n="restore-verse-btn">â†º Ø§Ø³ØªØ¹Ø§Ø¯Ø© Ø§Ù„ÙƒØ§Ù…Ù„Ø©</button>
+                                <button id="use-selection-btn" class="verse-action-btn" disabled data-i18n="use-selection-btn">✂ استخدم المحدد</button>
+                                <button id="restore-verse-btn" class="verse-action-btn" disabled data-i18n="restore-verse-btn">↺ استعادة الكاملة</button>
                             </div>
                         </div>
                         
                         <div class="input-group">
-                            <label for="verse-reference" data-i18n="label-reference">Ø§Ù„Ù…Ø±Ø¬Ø¹:</label>
-                            <input type="text" id="verse-reference" data-i18n-placeholder="ref-placeholder" placeholder="Ø³ÙŠØªÙ… Ù…Ù„Ø¤Ù‡ ØªÙ„Ù‚Ø§Ø¦ÙŠØ§Ù‹" readonly>
+                            <label for="verse-reference" data-i18n="label-reference">المرجع:</label>
+                            <input type="text" id="verse-reference" data-i18n-placeholder="ref-placeholder" placeholder="سيتم ملؤه تلقائياً" readonly>
                         </div>
                     </div>
 
                     <div class="design-controls">
                         <div class="input-group">
-                            <label data-i18n="label-font">Ù†ÙˆØ¹ Ø§Ù„Ø®Ø·:</label>
+                            <label data-i18n="label-font">نوع الخط:</label>
                             <select id="font-style">
-                                <option value="thuluth-deco" data-i18n="font-thuluth">Ø«Ù„Ø«</option>
-                                <option value="amiri" data-i18n="font-amiri">Ø£Ù…ÙŠØ±ÙŠ</option>
-                                <option value="aref-ruqaa" selected data-i18n="font-aref">Ø¹Ø±Ù Ø±Ù‚Ø§Ø¹</option>
-                                <option value="reem-kufi" data-i18n="font-reem">Ø±ÙŠÙ… ÙƒÙˆÙÙŠ</option>
-                                <option value="lateef" data-i18n="font-lateef">Ù„Ø·ÙŠÙ</option>
-                                <option value="scheherazade" data-i18n="font-scheherazade">Ø´Ù‡Ø±Ø²Ø§Ø¯</option>
-                                <option value="noto-naskh" data-i18n="font-noto">Ù†Ø³Ø®</option>
-                                <option value="markazi-text" data-i18n="font-markazi">Ù…Ø±Ú©Ø²ÙŠ</option>
-                                <option value="katibeh" data-i18n="font-katibeh">Ú©Ø§ØªØ¨</option>
-                                <option value="mirza" data-i18n="font-mirza">Ù…Ø±Ø²Ø§</option>
-                                <option value="harmattan" data-i18n="font-harmattan">Ù‡Ø±Ù…Ø§ØªØ§Ù†</option>
-                                <option value="diwan-kufi" data-i18n="font-diwan">Ø¯ÙˆØ§Ù†ÙŠ</option>
+                                <option value="thuluth-deco" data-i18n="font-thuluth">ثلث</option>
+                                <option value="amiri" data-i18n="font-amiri">أميري</option>
+                                <option value="aref-ruqaa" selected data-i18n="font-aref">عرف رقاع</option>
+                                <option value="reem-kufi" data-i18n="font-reem">ريم كوفي</option>
+                                <option value="lateef" data-i18n="font-lateef">لطيف</option>
+                                <option value="scheherazade" data-i18n="font-scheherazade">شهرزاد</option>
+                                <option value="noto-naskh" data-i18n="font-noto">نسخ</option>
+                                <option value="markazi-text" data-i18n="font-markazi">مرکزي</option>
+                                <option value="katibeh" data-i18n="font-katibeh">کاتب</option>
+                                <option value="mirza" data-i18n="font-mirza">مرزا</option>
+                                <option value="harmattan" data-i18n="font-harmattan">هرماتان</option>
+                                <option value="diwan-kufi" data-i18n="font-diwan">دواني</option>
                             </select>
                         </div>
 
                         <div class="input-group">
-                            <label data-i18n="label-colors">Ù…Ø¸Ù‡Ø± Ø§Ù„Ø£Ù„ÙˆØ§Ù†:</label>
+                            <label data-i18n="label-colors">مظهر الألوان:</label>
                             <div class="color-combinations">
                                 <div class="color-option" data-bg="gradient1" data-text="white">
                                     <div class="color-preview bg-gradient1"></div>
-                                    <span data-i18n="color-blue-white">Ø£Ø²Ø±Ù‚ Ø£Ø¨ÙŠØ¶</span>
+                                    <span data-i18n="color-blue-white">أزرق أبيض</span>
                                 </div>
                                 <div class="color-option" data-bg="gradient5" data-text="white">
                                     <div class="color-preview bg-gradient5"></div>
-                                    <span data-i18n="color-purple-white">Ø¨Ù†ÙØ³Ø¬ÙŠ Ø£Ø¨ÙŠØ¶</span>
+                                    <span data-i18n="color-purple-white">بنفسجي أبيض</span>
                                 </div>
                                 <div class="color-option" data-bg="gradient3" data-text="white">
                                     <div class="color-preview bg-gradient3"></div>
-                                    <span data-i18n="color-pink-white">ÙˆØ±Ø¯ÙŠ Ø£Ø¨ÙŠØ¶</span>
+                                    <span data-i18n="color-pink-white">وردي أبيض</span>
                                 </div>
                                 <div class="color-option" data-bg="decorative" data-text="gold">
                                     <div class="color-preview bg-decorative"></div>
-                                    <span data-i18n="color-dark-gold">Ø¯Ø§ÙƒÙ† Ø°Ù‡Ø¨ÙŠ</span>
+                                    <span data-i18n="color-dark-gold">داكن ذهبي</span>
                                 </div>
                                 <div class="color-option" data-bg="solid-white" data-text="black">
                                     <div class="color-preview bg-solid-white"></div>
-                                    <span data-i18n="color-white-black">Ø£Ø¨ÙŠØ¶ Ø£Ø³ÙˆØ¯</span>
+                                    <span data-i18n="color-white-black">أبيض أسود</span>
                                 </div>
                                 <div class="color-option" data-bg="solid-cream" data-text="darkblue">
                                     <div class="color-preview bg-solid-cream"></div>
-                                    <span data-i18n="color-cream-blue">ÙƒØ±ÙŠÙ…ÙŠ Ø£Ø²Ø±Ù‚</span>
+                                    <span data-i18n="color-cream-blue">كريمي أزرق</span>
                                 </div>
                                 <div class="color-option" data-bg="solid-lightblue" data-text="black">
                                     <div class="color-preview bg-solid-lightblue"></div>
-                                    <span data-i18n="color-lb-black">Ø£Ø²Ø±Ù‚ ÙØ§ØªØ­ Ø£Ø³ÙˆØ¯</span>
+                                    <span data-i18n="color-lb-black">أزرق فاتح أسود</span>
                                 </div>
                             </div>
                         </div>
@@ -216,23 +216,23 @@
                         <div class="input-group">
                             <label for="logo-toggle">
                                 <input type="checkbox" id="logo-toggle">
-                                <span data-i18n="label-logo">Ø¥Ø¸Ù‡Ø§Ø± Ø§Ù„Ø´Ø¹Ø§Ø±</span>
+                                <span data-i18n="label-logo">إظهار الشعار</span>
                             </label>
                         </div>
 
                         <div class="action-buttons">
-                            <button id="generate-btn" class="generate-btn" data-i18n="generate-btn">Ø¥Ù†Ø´Ø§Ø¡ ØµÙˆØ±Ø©</button>
-                            <button id="download-btn" class="download-btn" disabled data-i18n="download-btn">ØªØ­Ù…ÙŠÙ„ Ø§Ù„ØµÙˆØ±Ø©</button>
+                            <button id="generate-btn" class="generate-btn" data-i18n="generate-btn">إنشاء صورة</button>
+                            <button id="download-btn" class="download-btn" disabled data-i18n="download-btn">تحميل الصورة</button>
                         </div>
                     </div>
                 </div>
 
                 <div class="preview-panel">
-                    <h3 data-i18n="preview-title">Ù…Ø¹Ø§ÙŠÙ†Ø© Ù…Ø¨Ø§Ø´Ø±Ø©</h3>
+                    <h3 data-i18n="preview-title">معاينة مباشرة</h3>
                     <div class="canvas-container">
                         <canvas id="quote-canvas" width="1080" height="1080"></canvas>
                     </div>
-                    <div id="success-message" class="success-message" data-i18n="success-msg">ØªÙ… Ø¥Ù†Ø´Ø§Ø¡ Ø§Ù„ØµÙˆØ±Ø© Ø¨Ù†Ø¬Ø§Ø­!</div>
+                    <div id="success-message" class="success-message" data-i18n="success-msg">تم إنشاء الصورة بنجاح!</div>
                 </div>
             </section>
             </div>
@@ -241,7 +241,7 @@
         </main>
 
         <footer class="site-footer">
-            <p class="footer-note" data-i18n="footer-note">ØµÙ…Ù… ÙˆØ·ÙˆØ± Ø¨ÙˆØ§Ø³Ø·Ø© Ù…Ø§ÙŠÙƒÙ„ Ù…Ù†ØµÙˆØ±</p>
+            <p class="footer-note" data-i18n="footer-note">صمم وطور بواسطة مايكل منصور</p>
         </footer>
     </div>
         <script src="../js/data/bible-database.js"></script>
