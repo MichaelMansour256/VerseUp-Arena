@@ -3,8 +3,8 @@
 // in quote-feature.js and the search UI in quote-search.js.
 const FONT_MAP = {
     'thuluth-deco': 'Thuluth Deco, serif',
-    'amiri': 'Amiri, serif',
     'aref-ruqaa': 'Aref Ruqaa, serif',
+    'amiri': 'Amiri, serif',
     'reem-kufi': 'Reem Kufi, sans-serif',
     'lateef': 'Lateef, serif',
     'scheherazade': 'Scheherazade, serif',
@@ -105,6 +105,93 @@ export const quoteRendererMixin = {
         return colors[color] ?? '#ffffff';
     },
 
+    // Arabic-Indic digits for in-text verse markers (١٢٣ instead of 123).
+    toArabicIndicDigits(value) {
+        const digits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+        return String(value).replace(/[0-9]/g, d => digits[Number(d)]);
+    },
+
+    // True only for a loaded multi-verse range — single verses and manual
+    // text never get marker treatment, so old rendering is untouched.
+    isRangeQuote() {
+        return !!(this.currentVerse && this.currentVerse.isRange && this.currentVerse.verses && this.currentVerse.verses.length > 1);
+    },
+
+    // Split a "١ body..." paragraph into its marker and body. Only in range
+    // mode; otherwise the whole paragraph is body (backward compatible).
+    extractVerseMarker(paragraph) {
+        const text = String(paragraph || '');
+        if (!this.isRangeQuote()) return { marker: null, body: text };
+        const match = text.match(/^\s*([0-9٠-٩]+)\s+([\s\S]+)$/);
+        if (!match) return { marker: null, body: text };
+        return { marker: this.toArabicIndicDigits(match[1]), body: match[2] };
+    },
+
+    // Wrap range text into drawable lines: [{ marker, text }]. The marker is
+    // kept out of the width math (it draws smaller) and sticks to the first
+    // visual line of its verse; continuation lines render marker-free.
+    buildVerseLines(text, maxWidth, fontSize) {
+        const visual = [];
+        const paragraphs = String(text || '').split('\n');
+        this.ctx.font = `${fontSize}px ${this.getFontFamily(this.selectedFont)}`;
+        paragraphs.forEach((paragraph) => {
+            if (!paragraph.trim()) {
+                visual.push({ marker: null, text: '' });
+                return;
+            }
+            const { marker, body } = this.extractVerseMarker(paragraph);
+            const words = body.split(' ');
+            let currentLine = '';
+            let firstLine = true;
+            const flush = () => {
+                if (!currentLine) return;
+                visual.push({ marker: firstLine ? marker : null, text: currentLine });
+                firstLine = false;
+                currentLine = '';
+            };
+            for (const word of words) {
+                const testLine = currentLine ? `${currentLine} ${word}` : word;
+                if (this.ctx.measureText(testLine).width > maxWidth && currentLine) {
+                    flush();
+                    currentLine = word;
+                } else {
+                    currentLine = testLine;
+                }
+            }
+            flush();
+        });
+        return visual.length ? visual : [{ marker: null, text: '' }];
+    },
+
+    // Draw one verse line centered: body full-size, marker (١ ٢ ٣) small and
+    // raised at the RTL line start (right side) — Bible-style, no parentheses,
+    // and pure-digit runs so bidi can never mirror them.
+    drawVerseLine(line, centerX, y, fontFamily, fontSize) {
+        const text = typeof line === 'string' ? line : line.text;
+        const marker = typeof line === 'string' ? null : line.marker;
+        if (!marker) {
+            this.ctx.fillText(text, centerX, y);
+            return;
+        }
+        // Two runs, one centered block: marker small + raised (superscript,
+        // Bible-style) at the RTL line start (right), body full-size. Each
+        // run is measured in its own font so centering stays exact, and the
+        // marker is pure Arabic-Indic digits (no parentheses) so bidi can
+        // never mirror it the way "(1)" mirrored in the old single-string.
+        const markerSize = Math.max(26, Math.round(fontSize * 0.5));
+        this.ctx.font = `bold ${fontSize}px ${fontFamily}`;
+        const bodyWidth = this.ctx.measureText(text).width;
+        this.ctx.font = `${markerSize}px ${fontFamily}`;
+        const markerWidth = this.ctx.measureText(marker).width;
+        const gap = fontSize * 0.28;
+        const totalWidth = bodyWidth + gap + markerWidth;
+        const rightEdge = centerX + totalWidth / 2;
+        this.ctx.fillText(marker, rightEdge - markerWidth / 2, y - fontSize * 0.38);
+        this.ctx.font = `bold ${fontSize}px ${fontFamily}`;
+        this.ctx.fillText(text, rightEdge - markerWidth - gap - bodyWidth / 2, y);
+    },
+
+
     wrapText(text, maxWidth, fontSize) {
         const lines = [];
         const paragraphs = String(text || '').split('\n');
@@ -162,7 +249,12 @@ export const quoteRendererMixin = {
         const centerY = this.canvas.height / 2;
 
         const fontSize = this.calculateFontSize(verseText, maxWidth);
-        const lines = this.wrapText(verseText, maxWidth, fontSize);
+        // Range quotes draw small raised Arabic-Indic markers; everything else
+        // keeps the legacy single-fillText path untouched.
+        const rangeMode = typeof this.isRangeQuote === 'function' && this.isRangeQuote();
+        const lines = rangeMode
+            ? this.buildVerseLines(verseText, maxWidth, fontSize)
+            : this.wrapText(verseText, maxWidth, fontSize);
         const lineHeight = fontSize * 1.35;
         const textBlockReserve = verseReference ? 170 : 90;
         const usableHeight = this.canvas.height - textBlockReserve - 90;
@@ -177,7 +269,9 @@ export const quoteRendererMixin = {
 
         this.ctx.font = `bold ${fontSize}px ${fontFamily}`;
         lines.forEach((line, index) => {
-            this.ctx.fillText(line, this.canvas.width / 2, startY + (index * lineHeight));
+            const y = startY + (index * lineHeight);
+            if (rangeMode) this.drawVerseLine(line, this.canvas.width / 2, y, fontFamily, fontSize);
+            else this.ctx.fillText(line, this.canvas.width / 2, y);
         });
 
         this.ctx.shadowColor = 'transparent';
@@ -242,10 +336,11 @@ export const quoteRendererMixin = {
     },
 
     downloadImage() {
+        const rawReference = document.getElementById('verse-reference').value.trim() || 'bible-verse';
+        const verseReference = (typeof bibleAPI !== 'undefined' && bibleAPI.stripBidiControls) ? bibleAPI.stripBidiControls(rawReference) : rawReference;
         const link = document.createElement('a');
-        const verseReference = document.getElementById('verse-reference').value.trim() || 'bible-verse';
         const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
-        link.download = `${verseReference}-${timestamp}.png`;
+        link.download = verseReference + '-' + timestamp + '.png';
         link.href = this.canvas.toDataURL();
         link.click();
     }

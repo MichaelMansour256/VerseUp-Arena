@@ -920,7 +920,7 @@ class BibleQuoteGenerator {
         const book = bibleAPI.getBookByName(this.bibleData, range.bookId);
         const bookName = book ? (book.name_ar || book.name) : range.bookId;
         const reference = bibleAPI.formatArabicRangeReference(bookName, range.chapter, range.startVerse, range.endVerse);
-        const combinedText = verses.map(v => `(${v.verse}) ${v.text}`).join('\n');
+        const combinedText = verses.map(v => `${bibleAPI.formatArabicNumber(v.verse)} ${v.text}`).join('\n');
         this.currentVerse = {
             text: combinedText,
             reference,

@@ -95,7 +95,14 @@ describe('BibleAPI multi-verse range (generic, consecutive, same chapter)', () =
     });
 
     test('formatArabicRangeReference: multi-verse uses ch:start-end Arabic digits', () => {
-        assert.equal(bibleAPI.formatArabicRangeReference('مزمور', 91, 1, 3), 'مزمور ٩١:١-٣');
-        assert.equal(bibleAPI.formatArabicRangeReference('يوحنا', 3, 16, 18), 'يوحنا ٣:١٦-١٨');
+        const stripBidi = (s) => String(s).replace(/[\u202A-\u202E\u2066-\u2069\u200E\u200F]/g, '');
+        assert.equal(stripBidi(bibleAPI.formatArabicRangeReference('مزمور', 91, 1, 3)), 'مزمور ٩١:١-٣');
+        assert.equal(stripBidi(bibleAPI.formatArabicRangeReference('يوحنا', 3, 16, 18)), 'يوحنا ٣:١٦-١٨');
+    });
+
+    test('formatArabicRangeReference: wraps digits in bidi isolates so canvas cannot mirror them', () => {
+        const ref = bibleAPI.formatArabicRangeReference('مزمور', 91, 1, 3);
+        assert.ok(ref.includes(String.fromCharCode(8294)), 'expected LRI isolate U+2066');
+        assert.ok(ref.includes(String.fromCharCode(8297)), 'expected PDI isolate U+2069');
     });
 });

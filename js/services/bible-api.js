@@ -6,6 +6,12 @@ class BibleAPI {
         this.isLoading = false;
     }
 
+    // Remove invisible bidi/directional controls for contexts that cannot
+    // render them (filenames, plain-text comparisons). Canvas keeps them.
+    stripBidiControls(value) {
+        return String(value || '').replace(/[\u202A-\u202E\u2066-\u2069\u200E\u200F\u061C]/g, '');
+    }
+
     // Load the entire Bible data
     async loadBibleData() {
         if (this.cache.has('bibleData')) {
@@ -359,11 +365,12 @@ class BibleAPI {
         return `${bookName} ${this.formatArabicNumber(chapter)}: ${this.formatArabicNumber(verse)}`;
     }
 
-    // Convert a consecutive verse RANGE to Arabic format: "book ch:start-end".
+    // Convert a consecutive verse RANGE to Arabic format.
     // Single-verse ranges collapse to formatArabicReference so old call sites
-    // and existing styling stay untouched. Uses ":" (no space) for the range
-    // form per the feature spec (مزمور 91:1-3) while the legacy single-verse
-    // "ch: verse" spacing is preserved by formatArabicReference.
+    // and existing styling stay untouched. The numeric cluster is wrapped in
+    // an LTR isolate (LRI..PDI, U+2066/U+2069) so the ":" and "-" (neutral
+    // bidi classes) stay glued to the digits — without it the hyphen splits
+    // the run and RTL reorders the range into mirrored digits on canvas.
     formatArabicRangeReference(bookName, chapter, startVerse, endVerse) {
         const start = parseInt(startVerse, 10);
         const end = endVerse === undefined || endVerse === null || endVerse === ''
@@ -373,7 +380,13 @@ class BibleAPI {
             return this.formatArabicReference(bookName, chapter, isNaN(start) ? startVerse : start);
         }
         const range = start <= end ? [start, end] : [end, start];
-        return `${bookName} ${this.formatArabicNumber(chapter)}:${this.formatArabicNumber(range[0])}-${this.formatArabicNumber(range[1])}`;
+        const cluster = `${this.formatArabicNumber(chapter)}:${this.formatArabicNumber(range[0])}-${this.formatArabicNumber(range[1])}`;
+        // NOTE: 8294 = U+2066 (LRI), 8297 = U+2069 (PDI) in decimal.
+        // Do NOT write fromCharCode(2066) — decimal 2066 is U+0812, a visible
+        // Samaritan letter that leaked into references as "ࠒ/ࠕ" before.
+        const LRI = String.fromCharCode(8294);
+        const PDI = String.fromCharCode(8297);
+        return `${bookName} ${LRI}${cluster}${PDI}`;
     }
 
     // Sorted list of verse numbers available in a chapter (generic — no

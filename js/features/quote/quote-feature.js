@@ -254,7 +254,7 @@ export const quoteFeatureMixin = {
         const bookName = book ? (book.name_ar || book.name) : this.currentVerse.bookName;
         const reference = bibleAPI.formatArabicRangeReference(bookName, this.currentVerse.chapter, nextStart, nextEnd);
         this.currentVerse = {
-            text: verses.map(v => `(${v.verse}) ${v.text}`).join('\n'),
+            text: verses.map(v => `${bibleAPI.formatArabicNumber(v.verse)} ${v.text}`).join('\n'),
             reference,
             bookId: bookKey,
             bookName,
