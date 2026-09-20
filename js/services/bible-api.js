@@ -358,6 +358,73 @@ class BibleAPI {
     formatArabicReference(bookName, chapter, verse) {
         return `${bookName} ${this.formatArabicNumber(chapter)}: ${this.formatArabicNumber(verse)}`;
     }
+
+    // Convert a consecutive verse RANGE to Arabic format: "book ch:start-end".
+    // Single-verse ranges collapse to formatArabicReference so old call sites
+    // and existing styling stay untouched. Uses ":" (no space) for the range
+    // form per the feature spec (مزمور 91:1-3) while the legacy single-verse
+    // "ch: verse" spacing is preserved by formatArabicReference.
+    formatArabicRangeReference(bookName, chapter, startVerse, endVerse) {
+        const start = parseInt(startVerse, 10);
+        const end = endVerse === undefined || endVerse === null || endVerse === ''
+            ? start
+            : parseInt(endVerse, 10);
+        if (isNaN(start) || isNaN(end) || start === end) {
+            return this.formatArabicReference(bookName, chapter, isNaN(start) ? startVerse : start);
+        }
+        const range = start <= end ? [start, end] : [end, start];
+        return `${bookName} ${this.formatArabicNumber(chapter)}:${this.formatArabicNumber(range[0])}-${this.formatArabicNumber(range[1])}`;
+    }
+
+    // Sorted list of verse numbers available in a chapter (generic — no
+    // hardcoded counts; works with any book/chapter in the dataset).
+    getChapterVerseNumbers(bibleData, bookName, chapter) {
+        const book = this.getBookByName(bibleData, bookName);
+        if (!book || !book.chapters || !Array.isArray(book.chapters)) return [];
+        const chapterObj = book.chapters.find(ch => ch && ch.chapter == chapter);
+        if (!chapterObj || !chapterObj.verses || !Array.isArray(chapterObj.verses)) return [];
+        return chapterObj.verses
+            .filter(v => v && v.verse !== undefined && v.verse !== null)
+            .map(v => parseInt(v.verse, 10))
+            .filter(v => !isNaN(v))
+            .sort((a, b) => a - b);
+    }
+
+    // Fetch consecutive verses start..end (inclusive) from the SAME chapter,
+    // in biblical order. Returns null when the range is invalid or any verse
+    // in the range is missing. Never paraphrases — raw stored text only.
+    getVerseRange(bibleData, bookName, chapter, startVerse, endVerse) {
+        const start = parseInt(startVerse, 10);
+        const end = parseInt(endVerse, 10);
+        if (isNaN(start) || isNaN(end)) return null;
+        const [from, to] = start <= end ? [start, end] : [end, start];
+        const verses = [];
+        for (let v = from; v <= to; v += 1) {
+            const text = this.getVerse(bibleData, bookName, chapter, v);
+            if (!text) return null;
+            verses.push({ verse: v, text });
+        }
+        return verses.length ? verses : null;
+    }
+
+    // Validate a consecutive range inside one chapter. Returns
+    // { valid, reason } where reason is a machine-readable code the UI maps
+    // to a friendly Arabic message.
+    validateVerseRange(bibleData, bookName, chapter, startVerse, endVerse) {
+        const start = parseInt(startVerse, 10);
+        const end = parseInt(endVerse, 10);
+        if (isNaN(start) || isNaN(end)) return { valid: false, reason: 'empty' };
+        if (start > end) return { valid: false, reason: 'reversed' };
+        const available = this.getChapterVerseNumbers(bibleData, bookName, chapter);
+        if (!available.length) return { valid: false, reason: 'no-chapter' };
+        const max = available[available.length - 1];
+        const min = available[0];
+        if (start < min || end > max) return { valid: false, reason: 'out-of-range', min, max };
+        for (let v = start; v <= end; v += 1) {
+            if (!available.includes(v)) return { valid: false, reason: 'gap', min, max, missing: v };
+        }
+        return { valid: true, reason: null, min, max };
+    }
 }
 
 // Create global instance

@@ -492,8 +492,38 @@
 }
 
 /* Hide single verse select when in multi-verse mode */
-.multi-verse-active #verse-select {
+.multi-verse-active .single-verse-group {
     display: none;
+}
+
+/* Range layout: side-by-side on desktop, stacked on narrow screens */
+.verse-range-controls .range-selects {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.range-hint {
+    margin: 6px 0 0;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+.range-preview {
+    margin: 8px 0 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--accent);
+    min-height: 1.4em;
+    line-height: 1.6;
+    word-break: break-word;
+}
+
+@media (max-width: 560px) {
+    .verse-range-controls .range-selects {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* Show range controls only in multi-verse mode */

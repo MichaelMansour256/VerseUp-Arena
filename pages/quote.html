@@ -85,8 +85,8 @@
                             </select>
                         </div>
 
-                        <div class="input-group">
-                            <label for="verse-select" data-i18n="label-verse">Ø§Ù„Ø¢ÙŠØ©:</label>
+                        <div class="input-group single-verse-group">
+                            <label for="verse-select" data-i18n="label-verse">الآية:</label>
                             <select id="verse-select" disabled>
                                 <option value="" data-i18n="opt-verse">-- Ø§Ø®ØªØ± Ø¢ÙŠØ© --</option>
                             </select>
@@ -109,28 +109,34 @@
                             </div>
                             <div id="search-results" class="search-results"></div>
                         </div>
-                    <!-- Multi-Verse Mode Toggle -->
-                    <div class="input-group verse-range-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="multi-verse-toggle">
-                            <span data-i18n="multi-verse-label">ÙˆØ¶Ø¹ Ø§Ù„Ø¢ÙŠØ§Øª Ø§Ù„Ù…ØªØ¹Ø¯Ø¯Ø©</span>
-                        </label>
                     </div>
-                    <!-- Verse Range Controls (shown in multi-verse mode) -->
+                    <!-- Multi-verse toggle: consecutive verses, same chapter -->
+                    <div class="input-group verse-range-group">
+                        <label class="checkbox-label" for="multi-verse-toggle">
+                            <input type="checkbox" id="multi-verse-toggle">
+                            <span data-i18n="multi-verse-label">آيات متتالية (نطاق)</span>
+                        </label>
+                        <p class="range-hint" data-i18n="multi-verse-hint">فعّل الوضع لاختيار من آية → إلى آية من نفس الإصحاح.</p>
+                    </div>
+                    <!-- Verse range controls (shown in multi-verse mode) -->
                     <div id="verse-range-controls" class="verse-range-controls hidden">
+                        <div class="range-selects">
                         <div class="input-group">
-                            <label for="verse-start" data-i18n="verse-range-start">Ø§Ù„Ø¢ÙŠØ© Ø§Ù„Ø¨Ø¯Ø¡:</label>
+                            <label for="verse-start" data-i18n="verse-range-start">من آية:</label>
                             <select id="verse-start" disabled>
-                                <option value="" data-i18n="opt-verse">-- Ø§Ø®ØªØ± Ø§Ù„Ø¢ÙŠØ© Ø§Ù„Ø¨Ø¯Ø¡ --</option>
+                                <option value="" data-i18n="opt-verse">-- اختر آية --</option>
                             </select>
                         </div>
                         <div class="input-group">
-                            <label for="verse-end" data-i18n="verse-range-end">Ø§Ù„Ø¢ÙŠØ© Ø§Ù„Ù†Ù‡Ø§ÙŠØ©:</label>
+                            <label for="verse-end" data-i18n="verse-range-end">إلى آية:</label>
                             <select id="verse-end" disabled>
-                                <option value="" data-i18n="opt-verse">-- Ø§Ø®ØªØ± Ø§Ù„Ø¢ÙŠØ© Ø§Ù„Ù†Ù‡Ø§ÙŠØ© --</option>
+                                <option value="" data-i18n="opt-verse">-- اختر آية --</option>
                             </select>
                         </div>
-                    </div>                    </div>
+                        </div>
+                        <p id="verse-range-preview" class="range-preview" aria-live="polite"></p>
+                    </div>
+                </div>
                 </div>
             </section>
 

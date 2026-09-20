@@ -300,6 +300,7 @@ class BibleQuoteGenerator {
         if (bookSelect) bookSelect.addEventListener('change', () => this.onBookChange());
         if (chapterSelect) chapterSelect.addEventListener('change', () => this.onChapterChange());
         if (verseSelect) verseSelect.addEventListener('change', () => this.onVerseChange());
+        if (typeof this.setupMultiVerseSelection === 'function') this.setupMultiVerseSelection();
         if (quotePrevBtn) quotePrevBtn.addEventListener('click', () => this.loadAdjacentQuoteVerse(-1));
         if (quoteNextBtn) quoteNextBtn.addEventListener('click', () => this.loadAdjacentQuoteVerse(1));
 
@@ -657,6 +658,7 @@ class BibleQuoteGenerator {
         chapterSelect.disabled = true;
         verseSelect.disabled = true;
         loadVerseBtn.disabled = true;
+        if (typeof this.resetVerseRangeControls === 'function') this.resetVerseRangeControls();
 
         const selectedBookId = bookSelect.value;
         if (!selectedBookId || !this.bibleData) return;
@@ -684,6 +686,7 @@ class BibleQuoteGenerator {
         verseSelect.innerHTML = '<option value="">-- اختر آية --</option>';
         verseSelect.disabled = true;
         loadVerseBtn.disabled = true;
+        if (typeof this.resetVerseRangeControls === 'function') this.resetVerseRangeControls();
 
         const selectedBookId = bookSelect.value;
         const selectedChapter = chapterSelect.value;
@@ -706,6 +709,9 @@ class BibleQuoteGenerator {
         }
 
         verseSelect.disabled = false;
+        if (typeof this.populateVerseRangeControls === 'function') {
+            this.populateVerseRangeControls(bookSelect.value, chapterSelect.value);
+        }
     }
 
     onVerseChange() {
@@ -713,10 +719,152 @@ class BibleQuoteGenerator {
         const chapterSelect = document.getElementById('chapter-select');
         const verseSelect = document.getElementById('verse-select');
         const loadVerseBtn = document.getElementById('load-verse-btn');
+        if (typeof this.isMultiVerseMode === 'function' && this.isMultiVerseMode()) {
+            loadVerseBtn.disabled = !(typeof this.getSelectedVerseRange === 'function' && this.getSelectedVerseRange());
+            return;
+        }
         loadVerseBtn.disabled = !(bookSelect.value && chapterSelect.value && verseSelect.value);
     }
 
+    isMultiVerseMode() {
+        const toggle = document.getElementById('multi-verse-toggle');
+        return !!(toggle && toggle.checked);
+    }
+
+    getSelectedVerseRange() {
+        const bookSelect = document.getElementById('book-select');
+        const chapterSelect = document.getElementById('chapter-select');
+        const startSelect = document.getElementById('verse-start');
+        const endSelect = document.getElementById('verse-end');
+        if (!bookSelect || !chapterSelect || !startSelect || !endSelect) return null;
+        if (!bookSelect.value || !chapterSelect.value || !startSelect.value || !endSelect.value) return null;
+        const start = parseInt(startSelect.value, 10);
+        const end = parseInt(endSelect.value, 10);
+        if (isNaN(start) || isNaN(end)) return null;
+        const range = start <= end ? [start, end] : [end, start];
+        return { bookId: bookSelect.value, chapter: chapterSelect.value, startVerse: range[0], endVerse: range[1] };
+    }
+
+    resetVerseRangeControls() {
+        const startSelect = document.getElementById('verse-start');
+        const endSelect = document.getElementById('verse-end');
+        const preview = document.getElementById('verse-range-preview');
+        const loadVerseBtn = document.getElementById('load-verse-btn');
+        if (startSelect) {
+            startSelect.innerHTML = '<option value="">-- اختر آية --</option>';
+            startSelect.disabled = true;
+        }
+        if (endSelect) {
+            endSelect.innerHTML = '<option value="">-- اختر آية --</option>';
+            endSelect.disabled = true;
+        }
+        if (preview) preview.textContent = '';
+        if (loadVerseBtn && this.isMultiVerseMode()) loadVerseBtn.disabled = true;
+    }
+
+    populateVerseRangeControls(bookId, chapter) {
+        const startSelect = document.getElementById('verse-start');
+        const endSelect = document.getElementById('verse-end');
+        if (!startSelect || !endSelect) return;
+        if (!this.isMultiVerseMode() || !this.bibleData) return;
+        const numbers = bibleAPI.getChapterVerseNumbers(this.bibleData, bookId, chapter);
+        startSelect.innerHTML = '<option value="">-- من آية --</option>';
+        endSelect.innerHTML = '<option value="">-- إلى آية --</option>';
+        numbers.forEach(verseNum => {
+            const startOption = document.createElement('option');
+            startOption.value = verseNum;
+            startOption.textContent = `من ${verseNum}`;
+            startSelect.appendChild(startOption);
+            const endOption = document.createElement('option');
+            endOption.value = verseNum;
+            endOption.textContent = `إلى ${verseNum}`;
+            endSelect.appendChild(endOption);
+        });
+        const enabled = numbers.length > 0;
+        startSelect.disabled = !enabled;
+        endSelect.disabled = !enabled;
+        this.updateVerseRangePreview();
+    }
+
+    syncVerseRangeEndOptions() {
+        const endSelect = document.getElementById('verse-end');
+        const startSelect = document.getElementById('verse-start');
+        if (!endSelect || !startSelect || !startSelect.value) return;
+        const start = parseInt(startSelect.value, 10);
+        Array.from(endSelect.options).forEach(option => {
+            if (!option.value) { option.disabled = false; return; }
+            option.disabled = parseInt(option.value, 10) < start;
+        });
+        if (endSelect.value && parseInt(endSelect.value, 10) < start) {
+            endSelect.value = String(start);
+        }
+    }
+
+    updateVerseRangePreview() {
+        const preview = document.getElementById('verse-range-preview');
+        const loadVerseBtn = document.getElementById('load-verse-btn');
+        if (!preview) return;
+        const range = this.getSelectedVerseRange();
+        if (!range) {
+            preview.textContent = '';
+            if (loadVerseBtn && this.isMultiVerseMode()) loadVerseBtn.disabled = true;
+            return;
+        }
+        const book = this.bibleData ? bibleAPI.getBookByName(this.bibleData, range.bookId) : null;
+        const bookName = book ? (book.name_ar || book.name) : range.bookId;
+        preview.textContent = `المعاينة: ${bibleAPI.formatArabicRangeReference(bookName, range.chapter, range.startVerse, range.endVerse)}`;
+        if (loadVerseBtn) loadVerseBtn.disabled = false;
+        const check = bibleAPI.validateVerseRange(this.bibleData, range.bookId, range.chapter, range.startVerse, range.endVerse);
+        if (!check.valid) {
+            preview.textContent = this.describeRangeError(check);
+            if (loadVerseBtn) loadVerseBtn.disabled = true;
+        }
+    }
+
+    describeRangeError(check) {
+        if (!check) return 'اختر آيتي البداية والنهاية.';
+        if (check.reason === 'reversed') return 'بداية النطاق أكبر من النهاية — اختر آية بداية أصغر.';
+        if (check.reason === 'out-of-range') return `النطاق خارج الإصحاح — المتاح من ${check.min} إلى ${check.max}.`;
+        if (check.reason === 'gap') return `الآية ${check.missing} غير موجودة في هذا الإصحاح.`;
+        if (check.reason === 'no-chapter') return 'اختر السفر والإصحاح أولاً.';
+        return 'اختر آيتي البداية والنهاية.';
+    }
+
+    setupMultiVerseSelection() {
+        const toggle = document.getElementById('multi-verse-toggle');
+        const controls = document.getElementById('verse-range-controls');
+        const verseGroup = document.querySelector('.book-chapter-controls');
+        const startSelect = document.getElementById('verse-start');
+        const endSelect = document.getElementById('verse-end');
+        const bookSelect = document.getElementById('book-select');
+        const chapterSelect = document.getElementById('chapter-select');
+        if (!toggle) return;
+        toggle.addEventListener('change', () => {
+            const active = toggle.checked;
+            if (controls) controls.classList.toggle('hidden', !active);
+            if (verseGroup) verseGroup.classList.toggle('multi-verse-active', active);
+            this.resetVerseRangeControls();
+            if (active && bookSelect && chapterSelect && bookSelect.value && chapterSelect.value) {
+                this.populateVerseRangeControls(bookSelect.value, chapterSelect.value);
+            }
+            this.onVerseChange();
+        });
+        if (startSelect) startSelect.addEventListener('change', () => {
+            this.syncVerseRangeEndOptions();
+            this.updateVerseRangePreview();
+            this.onVerseChange();
+        });
+        if (endSelect) endSelect.addEventListener('change', () => {
+            this.updateVerseRangePreview();
+            this.onVerseChange();
+        });
+    }
+
     loadSelectedVerse() {
+        if (typeof this.isMultiVerseMode === 'function' && this.isMultiVerseMode()) {
+            this.loadSelectedVerseRange();
+            return;
+        }
         const bookSelect = document.getElementById('book-select');
         const chapterSelect = document.getElementById('chapter-select');
         const verseSelect = document.getElementById('verse-select');
@@ -751,6 +899,48 @@ class BibleQuoteGenerator {
         } else {
             this.showValidationMessage('الآية غير موجودة', 'error');
         }
+    }
+
+    loadSelectedVerseRange() {
+        const range = typeof this.getSelectedVerseRange === 'function' ? this.getSelectedVerseRange() : null;
+        if (!range) {
+            this.showValidationMessage('اختر آيتي البداية والنهاية أولاً', 'error');
+            return;
+        }
+        const check = bibleAPI.validateVerseRange(this.bibleData, range.bookId, range.chapter, range.startVerse, range.endVerse);
+        if (!check.valid) {
+            this.showValidationMessage(this.describeRangeError(check), 'error');
+            return;
+        }
+        const verses = bibleAPI.getVerseRange(this.bibleData, range.bookId, range.chapter, range.startVerse, range.endVerse);
+        if (!verses || !verses.length) {
+            this.showValidationMessage('تعذر تحميل النطاق المحدد', 'error');
+            return;
+        }
+        const book = bibleAPI.getBookByName(this.bibleData, range.bookId);
+        const bookName = book ? (book.name_ar || book.name) : range.bookId;
+        const reference = bibleAPI.formatArabicRangeReference(bookName, range.chapter, range.startVerse, range.endVerse);
+        const combinedText = verses.map(v => `(${v.verse}) ${v.text}`).join('\n');
+        this.currentVerse = {
+            text: combinedText,
+            reference,
+            bookId: range.bookId,
+            bookName,
+            chapter: range.chapter,
+            verse: String(range.startVerse),
+            endVerse: String(range.endVerse),
+            isRange: range.startVerse !== range.endVerse,
+            verses
+        };
+        document.getElementById('verse-text').value = combinedText;
+        document.getElementById('verse-reference').value = reference;
+        this._fullVerseText = null;
+        document.getElementById('restore-verse-btn').disabled = true;
+        document.getElementById('use-selection-btn').disabled = true;
+        const count = verses.length;
+        this.showValidationMessage(count > 1 ? `تم تحميل ${count} آيات بنجاح` : 'تم تحميل الآية بنجاح', 'success');
+        this.updateQuoteAdjacentButtons();
+        this.generateImage();
     }
 
 

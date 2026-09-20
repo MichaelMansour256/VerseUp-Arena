@@ -106,24 +106,25 @@ export const quoteRendererMixin = {
     },
 
     wrapText(text, maxWidth, fontSize) {
-        const words = text.split(' ');
         const lines = [];
-        let currentLine = '';
-
+        const paragraphs = String(text || '').split('\n');
         this.ctx.font = `${fontSize}px ${this.getFontFamily(this.selectedFont)}`;
-
-        for (const word of words) {
-            const testLine = currentLine + (currentLine ? ' ' : '') + word;
-            if (this.ctx.measureText(testLine).width > maxWidth && currentLine) {
-                lines.push(currentLine);
-                currentLine = word;
-            } else {
-                currentLine = testLine;
+        paragraphs.forEach((paragraph, paragraphIndex) => {
+            const words = paragraph.split(' ');
+            let currentLine = '';
+            for (const word of words) {
+                const testLine = currentLine + (currentLine ? ' ' : '') + word;
+                if (this.ctx.measureText(testLine).width > maxWidth && currentLine) {
+                    lines.push(currentLine);
+                    currentLine = word;
+                } else {
+                    currentLine = testLine;
+                }
             }
-        }
-
-        if (currentLine) lines.push(currentLine);
-        return lines;
+            if (currentLine) lines.push(currentLine);
+            else if (paragraphIndex < paragraphs.length - 1) lines.push('');
+        });
+        return lines.length ? lines : [''];
     },
 
     generateImage() {
@@ -162,9 +163,12 @@ export const quoteRendererMixin = {
 
         const fontSize = this.calculateFontSize(verseText, maxWidth);
         const lines = this.wrapText(verseText, maxWidth, fontSize);
-        const lineHeight = fontSize * 1.4;
+        const lineHeight = fontSize * 1.35;
+        const textBlockReserve = verseReference ? 170 : 90;
+        const usableHeight = this.canvas.height - textBlockReserve - 90;
         const totalTextHeight = lines.length * lineHeight;
-        const startY = centerY - (totalTextHeight / 2) + (fontSize / 2);
+        const clampedHeight = Math.min(totalTextHeight, usableHeight);
+        const startY = centerY - (clampedHeight / 2) + (fontSize / 2);
 
         this.ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
         this.ctx.shadowBlur = 8;
@@ -214,7 +218,13 @@ export const quoteRendererMixin = {
     calculateFontSize(text, maxWidth) {
         const fontFamily = this.getFontFamily(this.selectedFont);
         const safetyMargin = DECORATIVE_FONTS.has(this.selectedFont) ? 0.75 : 0.8;
+        // Longer multi-verse quotes start smaller so 2-4 verses fit one card
+        // without overflowing; single verses keep the original 140px presence.
+        const lineCount = String(text || '').split('\n').length;
+        const longestLine = String(text || '').split('\n').reduce((m, l) => Math.max(m, l.length), 0);
         let fontSize = 140;
+        if (lineCount > 2 || longestLine > 220) fontSize = 96;
+        if (lineCount > 3 || longestLine > 420) fontSize = 72;
 
         this.ctx.font = `${fontSize}px ${fontFamily}`;
         while (this.ctx.measureText(text).width > maxWidth * safetyMargin && fontSize > 50) {

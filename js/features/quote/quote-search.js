@@ -249,6 +249,11 @@ export const quoteSearchMixin = {
         const bookSelect = document.getElementById('book-select');
         const chapterSelect = document.getElementById('chapter-select');
         const verseSelect = document.getElementById('verse-select');
+        const rangeToggle = document.getElementById('multi-verse-toggle');
+        if (rangeToggle && rangeToggle.checked) {
+            rangeToggle.checked = false;
+            rangeToggle.dispatchEvent(new Event('change'));
+        }
         bookSelect.value = this.currentVerse.bookId;
         this.onBookChange();
         chapterSelect.value = String(verseData.chapter);
