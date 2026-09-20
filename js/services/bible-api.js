@@ -380,7 +380,7 @@ class BibleAPI {
             return this.formatArabicReference(bookName, chapter, isNaN(start) ? startVerse : start);
         }
         const range = start <= end ? [start, end] : [end, start];
-        const cluster = `${this.formatArabicNumber(chapter)}:${this.formatArabicNumber(range[0])}-${this.formatArabicNumber(range[1])}`;
+        const cluster = `${this.formatArabicNumber(chapter)} : ${this.formatArabicNumber(range[0])} - ${this.formatArabicNumber(range[1])}`;
         // NOTE: 8294 = U+2066 (LRI), 8297 = U+2069 (PDI) in decimal.
         // Do NOT write fromCharCode(2066) — decimal 2066 is U+0812, a visible
         // Samaritan letter that leaked into references as "ࠒ/ࠕ" before.
